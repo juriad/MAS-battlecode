@@ -87,7 +87,7 @@ public class RobotPlayer {
                     // BASHERs attack automatically, so let's just move around mostly randomly
                     if (rc.isCoreReady()) {
                         int fate = rand.nextInt(1000);
-                        if (fate < 800) {
+                        if (fate < 200) {
                             tryMove(directions[rand.nextInt(8)]);
                         } else {
                             tryMove(rc.getLocation().directionTo(rc.senseEnemyHQLocation()));
