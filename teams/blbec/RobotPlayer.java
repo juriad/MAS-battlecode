@@ -1,4 +1,4 @@
-package blbec1;
+package blbec;
 
 import battlecode.common.*;
 import java.util.*;
@@ -87,7 +87,7 @@ public class RobotPlayer {
                     // BASHERs attack automatically, so let's just move around mostly randomly
                     if (rc.isCoreReady()) {
                         int fate = rand.nextInt(1000);
-                        if (fate < 200) {
+                        if (fate < -1) {
                             tryMove(directions[rand.nextInt(8)]);
                         } else {
                             tryMove(rc.getLocation().directionTo(rc.senseEnemyHQLocation()));
