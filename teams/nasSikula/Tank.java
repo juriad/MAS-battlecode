@@ -3,9 +3,9 @@ package nasSikula;
 import battlecode.common.GameActionException;
 import battlecode.common.RobotController;
 
-public class Basher extends AttackingBot {
+public class Tank extends AttackingBot {
 
-	public Basher(RobotController rc) {
+	public Tank(RobotController rc) {
 		super(rc);
 	}
 

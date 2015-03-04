@@ -1,4 +1,4 @@
-package nasSikula;
+package nasSikula.context;
 
 import battlecode.common.Clock;
 import battlecode.common.RobotController;
@@ -32,7 +32,7 @@ public class Objectives {
 			break;
 		case BEAVER:
 			for (RobotType rt : RobotType.values()) {
-				if (Math.random() < 0.5) {
+				if (!rt.isBuildable() && Math.random() < 0.5) {
 					continue;
 				}
 				optimalNumber = getOptimalNumber(rt);
@@ -57,6 +57,14 @@ public class Objectives {
 			}
 		case SOLDIER: // nothing
 			break;
+		case TANKFACTORY:
+			return RobotType.TANK;
+		case TANK: // nothing
+			break;
+		case SUPPLYDEPOT: // nothing
+			break;
+		case HANDWASHSTATION: // nothing
+			break;
 
 		case AEROSPACELAB:
 			break;
@@ -68,19 +76,11 @@ public class Objectives {
 			break;
 		case DRONE:
 			break;
-		case HANDWASHSTATION:
-			break;
 		case HELIPAD:
 			break;
 		case LAUNCHER:
 			break;
 		case MISSILE:
-			break;
-		case SUPPLYDEPOT:
-			break;
-		case TANK:
-			break;
-		case TANKFACTORY:
 			break;
 		case TECHNOLOGYINSTITUTE:
 			break;
@@ -101,16 +101,35 @@ public class Objectives {
 		case BEAVER:
 			return 5 + getOptimalNumber(RobotType.MINER) * 2;
 		case MINERFACTORY:
-			return (int) Math.log(Registry.ROBOT_COUNT.getCount(RobotType.MINER) + 3); 
+			return (int) Math.log(Registry.ROBOT_COUNT
+					.getCount(RobotType.MINER) + 3);
 		case MINER:
 			return 10 + Registry.ROBOT_COUNT.getCount(RobotType.SOLDIER) / 5;
 		case BARRACKS:
-			return (int) Math.log(Registry.ROBOT_COUNT
+			return 2 + (int) Math.log(Registry.ROBOT_COUNT
 					.getCount(RobotType.SOLDIER) + 3);
 		case SOLDIER:
 			return Integer.MAX_VALUE;
 		case BASHER:
 			return Integer.MAX_VALUE;
+		case TANKFACTORY:
+			if (rc.hasBuildRequirements(RobotType.TANKFACTORY)) {// it costs 500
+				return (int) Math.log(Registry.ROBOT_COUNT
+						.getCount(RobotType.TANK) + 3);
+			}
+			break;
+		case TANK:
+			return Integer.MAX_VALUE;
+		case SUPPLYDEPOT:
+			return 1 + (int) (Math.log(Registry.ROBOT_COUNT
+					.getCount(RobotType.SOLDIER) + 3) / 4);
+		case HANDWASHSTATION:
+			int whenToStart = 150;
+			if (Clock.getRoundNum() + whenToStart >= rc.getRoundLimit()) {
+				return 5;
+			}
+			break;
+
 		case AEROSPACELAB:
 			break;
 		case COMMANDER:
@@ -119,29 +138,11 @@ public class Objectives {
 			break;
 		case DRONE:
 			return Integer.MAX_VALUE;
-		case HANDWASHSTATION:
-			int whenToStart = 150;
-			if ((Clock.getRoundNum() + whenToStart) >= rc.getRoundLimit())
-			{
-				return 5;
-			}
-			break;
 		case HELIPAD:
 			break;
 		case LAUNCHER:
 			return Integer.MAX_VALUE;
 		case MISSILE:
-			break;
-		case SUPPLYDEPOT:
-			break;
-		case TANK:
-			//TODO chci rict if TANKFACTORY.count > 1
-			
-			return Integer.MAX_VALUE;
-		case TANKFACTORY:
-			if (rc.getSupplyLevel() > 800){//it costs 500
-				return 1;//TODO make it variable
-			}
 			break;
 		case TECHNOLOGYINSTITUTE:
 			break;

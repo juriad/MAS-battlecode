@@ -3,16 +3,13 @@ package nasSikula;
 import battlecode.common.GameActionException;
 import battlecode.common.RobotController;
 
-public class Basher extends AttackingBot {
-
-	public Basher(RobotController rc) {
+public class NoOpBot extends BaseBot {
+	public NoOpBot(RobotController rc) {
 		super(rc);
 	}
 
-	@Override
 	public void execute() throws GameActionException {
-		transferSupplies();
+		// System.out.println(rc.getID() + ": alive " );
 		rc.yield();
 	}
-
 }
