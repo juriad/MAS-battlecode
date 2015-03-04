@@ -57,4 +57,22 @@ public class Registry {
             return RobotType.values().length;
         }
     }
+    
+    public static class Map extends RegistryClass {
+
+		public Map(RobotController rc, int offset) {
+			super(rc, offset);
+		}
+
+		@Override
+		int getSize() {
+			return 240*240;
+		}
+    	
+		// flag na slepou ulicku 2x - vytezeno (jsem miner + soldger a backtracuju),
+		// smer odkud se prislo -4bit
+		// 
+    	
+    
+    }
 }

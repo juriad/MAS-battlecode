@@ -60,6 +60,7 @@ public class RobotPlayer {
 
     public static void run(RobotController rc) throws Exception {
         Registry.init(rc);
+        Objectives.init(rc);
         BaseBot myself = convert(rc);
         if (myself == null) {
             return;
