@@ -1,5 +1,6 @@
 package nasSikula;
 
+import battlecode.common.Clock;
 import battlecode.common.RobotController;
 import battlecode.common.RobotType;
 
@@ -91,19 +92,18 @@ public class Objectives {
 		return null;
 	}
 
-	public int getOptimalNumber(RobotType type) {//kolik by jich ted melo byt
+	public int getOptimalNumber(RobotType type) {// kolik by jich ted melo byt
 		switch (type) {
 		case HQ:
 			return Integer.MIN_VALUE;
 		case TOWER:
 			return Integer.MIN_VALUE;
 		case BEAVER:
-			return 5 + getOptimalNumber(RobotType.MINERFACTORY) * 2;
+			return 5 + getOptimalNumber(RobotType.MINER) * 2;
 		case MINERFACTORY:
-			return (int) Math.log(Registry.ROBOT_COUNT
-					.getCount(RobotType.MINER) + 3);
+			return (int) Math.log(Registry.ROBOT_COUNT.getCount(RobotType.MINER) + 3); 
 		case MINER:
-			return 5 + Registry.ROBOT_COUNT.getCount(RobotType.SOLDIER) / 5;
+			return 10 + Registry.ROBOT_COUNT.getCount(RobotType.SOLDIER) / 5;
 		case BARRACKS:
 			return (int) Math.log(Registry.ROBOT_COUNT
 					.getCount(RobotType.SOLDIER) + 3);
@@ -118,20 +118,30 @@ public class Objectives {
 		case COMPUTER:
 			break;
 		case DRONE:
-			break;
+			return Integer.MAX_VALUE;
 		case HANDWASHSTATION:
+			int whenToStart = 150;
+			if ((Clock.getRoundNum() + whenToStart) >= rc.getRoundLimit())
+			{
+				return 5;
+			}
 			break;
 		case HELIPAD:
 			break;
 		case LAUNCHER:
-			break;
+			return Integer.MAX_VALUE;
 		case MISSILE:
 			break;
 		case SUPPLYDEPOT:
 			break;
 		case TANK:
-			break;
+			//TODO chci rict if TANKFACTORY.count > 1
+			
+			return Integer.MAX_VALUE;
 		case TANKFACTORY:
+			if (rc.getSupplyLevel() > 800){//it costs 500
+				return 1;//TODO make it variable
+			}
 			break;
 		case TECHNOLOGYINSTITUTE:
 			break;

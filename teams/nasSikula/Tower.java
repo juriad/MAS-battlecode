@@ -17,7 +17,10 @@ public class Tower extends BaseBot {
 
     protected boolean defend() throws GameActionException {
         RobotInfo[] enemiesInAttackingRange = getEnemiesInAttackingRange();
-        attackLeastHealthEnemy(enemiesInAttackingRange);
+        if(rc.isWeaponReady()){
+        	attackLeastHealthEnemy(enemiesInAttackingRange);
+//TODO return false???? nemuzu utocit, pomuze mi vyrobit beavra? nebo to stoji cas? (jedna se o HQ....)
+        }
         return enemiesInAttackingRange.length > 0;
     }
 }

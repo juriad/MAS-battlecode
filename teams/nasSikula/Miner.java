@@ -7,7 +7,7 @@ import battlecode.common.RobotController;
 
 public class Miner extends BaseBot {
 
-    private static final double ORE_EPSILON = 0.2;
+    private static final double ORE_EPSILON = 0.9;
 
     public Miner(RobotController rc) {
         super(rc);

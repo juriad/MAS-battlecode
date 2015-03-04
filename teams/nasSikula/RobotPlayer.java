@@ -34,7 +34,7 @@ public class RobotPlayer {
         case DRONE:
             break;
         case HANDWASHSTATION:
-            break;
+        	return new Handwash(rc);
         case HELIPAD:
             break;
         case LAUNCHER:
