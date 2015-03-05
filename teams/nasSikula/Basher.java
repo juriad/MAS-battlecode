@@ -8,5 +8,10 @@ public class Basher extends AttackingBot {
 		super(rc);
 	}
 
-	private double ORE_EPSILON = 4;
-}//TODO attack musi byt 2 kroky na konci tahu od mista na ktere utoci- soucasna strategie ho zastavi a prd...
+	private static double ORE_EPSILON = 4;
+	
+	@Override
+	protected double get_ore_epsilon(){
+		return ORE_EPSILON;
+	}
+}

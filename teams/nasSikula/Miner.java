@@ -11,7 +11,7 @@ public class Miner extends MovingBot {
 		super(rc);
 	}
 	
-	private double ORE_EPSILON = 0.8;
+	private static double ORE_EPSILON = 0.8;
 	
 	@Override
 	public void execute() throws GameActionException {
@@ -67,6 +67,11 @@ public class Miner extends MovingBot {
 //		}
 //		return false;
 //	}
+	@Override
+	protected double get_ore_epsilon(){
+		return ORE_EPSILON;
+	}
+	
 	
 	protected void mineOrMoveTowardsOre() throws GameActionException {
 		double ore = rc.senseOre(rc.getLocation());

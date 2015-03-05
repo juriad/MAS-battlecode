@@ -18,6 +18,9 @@ public class AttackingBot extends MovingBot {
 		MapLocation target = null;
 		if (rc.getType() != RobotType.BASHER){
 			attackLeastHealtyEnemyInRange();
+		} else {
+			//TODO pri attacku musi byt na 2 kroky blizko (na konci tahu) od mista na ktere utoci
+			//soucasna strategie neutoci...
 		}
 
 		if (target == null) {

@@ -60,7 +60,7 @@ public abstract class BaseBot {
 				return d;
 			}
 		}
-		dir = theirHQ.directionTo(rc.getLocation());//get opposite
+		dir = dir.opposite();
 		dirs = getDirectionsToward(dir);
 		for (Direction d : dirs) {
 			if (rc.canSpawn(d, type)) {
