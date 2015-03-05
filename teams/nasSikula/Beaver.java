@@ -17,6 +17,7 @@ public class Beaver extends Miner {
 		} else {
 			spawnOrBuild();
 			if (!mine()) {
+				//System.out.println("!mine");
 				moveTowards(towardsOre(), true);
 			}
 		}

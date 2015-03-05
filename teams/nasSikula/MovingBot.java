@@ -144,10 +144,13 @@ public abstract class MovingBot extends BaseBot {
 	 */
 	protected boolean moveTowards(MapLocation ml, boolean miner)
 			throws GameActionException {
-		if (rc.isCoreReady()) {
+		//System.out.println("in moveTowards");
+		if (!rc.isCoreReady()) {
+			//System.out.println("core not ready");
 			return false;
 		}
 
+		//System.out.println("core ready");
 		Direction[] freeDirections = getFreeDirections(miner);
 		Direction directionTo = rc.getLocation().directionTo(ml);
 
@@ -180,8 +183,8 @@ public abstract class MovingBot extends BaseBot {
 				}
 			}
 		}
-
 		if (opt != null && rc.isCoreReady()) {
+			//System.out.println("move!!!");
 			rc.move(opt);
 			return true;
 		}

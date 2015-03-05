@@ -36,12 +36,14 @@ public class Objectives {
 			break;
 		case BEAVER:
 			for (RobotType rt : RobotType.values()) {
-				if (!rt.isBuildable() && Math.random() < 0.5) {
+				if (!rt.isBuildable() && Math.random() < 0.5) {//TODO vysvetlit co ma tohle delat
 					continue;
 				}
 				optimalNumber = getOptimalNumber(rt);
-				if (optimalNumber > Registry.ROBOT_COUNT.getCount(rt)) {
-					System.out.println("want build " + rt);
+				int currentNumber = Registry.ROBOT_COUNT.getCount(rt);
+				if (optimalNumber > currentNumber) {
+					System.out.println("want to build " + rt + " I have "
+									+currentNumber + " I want to have "+optimalNumber);
 					return rt;
 				}
 			}
