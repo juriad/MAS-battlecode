@@ -42,31 +42,6 @@ public class Miner extends MovingBot {
 		return mapLocation;
 	}
 
-//	/**
-//	 * @return true if robot should stay
-//	 * @throws GameActionException
-//	 */
-//	protected boolean mine() throws GameActionException {
-//		double ore = rc.senseOre(rc.getLocation());
-//		
-//		if (ore < ORE_EPSILON) {
-//			return false;
-//		}
-//		
-//		if (rc.isCoreReady()) {
-//			rc.mine();
-//		}
-//		return true;
-//	}
-//	
-//	protected boolean forceMine() throws GameActionException {
-//		double ore = rc.senseOre(rc.getLocation());
-//		if (rc.isCoreReady()) {
-//			rc.mine();
-//			return true;
-//		}
-//		return false;
-//	}
 	@Override
 	protected double get_ore_epsilon(){
 		return ORE_EPSILON;
@@ -78,7 +53,7 @@ public class Miner extends MovingBot {
 		if (ore < ORE_EPSILON) {
 			if (moveTowards(towardsOre(), true)){
 				//return true;
-			}
+			}//moved - or not - anyway try to mine
 		}
 		if (rc.isCoreReady()) {
 			rc.mine();

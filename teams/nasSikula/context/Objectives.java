@@ -78,6 +78,8 @@ public class Objectives {
 				int index = Rand.nextInt(buildablesCount);
 				RobotType rt = buildables[index];
 				return wantToBuild(rt);
+				//TODO this should be done somehow differently...
+				// chybi priority pro ruzne budovy, jednotky
 			}
 			
 			return null;
