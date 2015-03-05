@@ -114,4 +114,56 @@ public abstract class MovingBot extends BaseBot {
 		System.arraycopy(dirs, 0, out, 0, index);
 		return out;
 	}
+
+	/**
+	 * @param ml
+	 * @param miner
+	 * @return true if moved
+	 * @throws GameActionException
+	 */
+	protected boolean moveTowards(MapLocation ml, boolean miner)
+			throws GameActionException {
+		if (rc.isCoreReady()) {
+			return false;
+		}
+
+		Direction[] freeDirections = getFreeDirections(miner);
+		Direction directionTo = rc.getLocation().directionTo(ml);
+
+		int d = directionTo.ordinal();
+		Direction opt = null;
+		int delta = 100;
+		for (Direction dir : freeDirections) {
+			if (rc.canMove(dir)) {
+				int del = Math.min(
+						Math.min(Math.abs(dir.ordinal() - d),
+								Math.abs(dir.ordinal() - d - 8)),
+						Math.abs(dir.ordinal() - d + 8));
+				if (del < delta) {
+					delta = del;
+					opt = dir;
+				}
+			}
+		}
+		if (opt == null) {
+			for (Direction dir : Direction.values()) {
+				if (rc.canMove(dir)) {
+					int del = Math.min(
+							Math.min(Math.abs(dir.ordinal() - d),
+									Math.abs(dir.ordinal() - d - 8)),
+							Math.abs(dir.ordinal() - d + 8));
+					if (del < delta) {
+						delta = del;
+						opt = dir;
+					}
+				}
+			}
+		}
+
+		if (opt != null) {
+			rc.move(opt);
+			return true;
+		}
+		return false;
+	}
 }

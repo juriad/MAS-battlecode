@@ -1,18 +1,16 @@
 package nasSikula;
 
-import nasSikula.context.Registry;
 import battlecode.common.Direction;
 import battlecode.common.GameActionException;
 import battlecode.common.MapLocation;
 import battlecode.common.RobotController;
 import battlecode.common.RobotInfo;
-import battlecode.common.TerrainTile;
 
 public abstract class AttackingBot extends MovingBot {
 
 	public AttackingBot(RobotController rc) {
 		super(rc);
-		
+
 	}
 
 	public void execute() throws GameActionException {
@@ -22,7 +20,7 @@ public abstract class AttackingBot extends MovingBot {
 		} else {
 			markDeadEnd();
 		}
-		
+
 		RobotInfo[] enemies = getEnemiesInAttackingRange();
 
 		if (enemies.length > 0) {
@@ -30,12 +28,12 @@ public abstract class AttackingBot extends MovingBot {
 			if (rc.isWeaponReady()) {
 				attackLeastHealthEnemy(enemies);
 			}
-		} 
+		}
 
 		transferSupplies();
 		rc.yield();
 	}
-	
+
 	public void attackLeastHealthEnemy(RobotInfo[] enemies)
 			throws GameActionException {
 		if (enemies.length == 0) {
