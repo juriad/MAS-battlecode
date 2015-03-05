@@ -21,6 +21,10 @@ public class Objectives {
 
 	public RobotType spawnOrBuild(RobotType type) {
 		int optimalNumber;
+		if (rc.getTeamOre() < 500){
+			return null;
+		}
+			
 		switch (type) {
 		case HQ:
 			optimalNumber = getOptimalNumber(RobotType.BEAVER);
@@ -101,6 +105,8 @@ public class Objectives {
 		case BEAVER:
 			return 5 + getOptimalNumber(RobotType.MINER) * 2;
 		case MINERFACTORY:
+			System.out.println("chci vyrobit x MINERFACTORY " + (int) Math.log(Registry.ROBOT_COUNT
+					.getCount(RobotType.MINER) + 3));
 			return (int) Math.log(Registry.ROBOT_COUNT
 					.getCount(RobotType.MINER) + 3);
 		case MINER:

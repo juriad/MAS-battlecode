@@ -7,6 +7,7 @@ import battlecode.common.RobotController;
 
 public class Miner extends MovingBot {
 
+	private static final double MIN_ORE_EPSILON = 0.2;
 	private static final double ORE_EPSILON = 0.9;
 
 	public Miner(RobotController rc) {
@@ -60,14 +61,22 @@ public class Miner extends MovingBot {
 	}
 
 	/**
-	 * @return true if robot should move stay
+	 * @return true if robot should stay
 	 * @throws GameActionException
 	 */
 	protected boolean mine() throws GameActionException {
 		double ore = rc.senseOre(rc.getLocation());
+		//if (ore < MIN_ORE_EPSILON) {
 		if (ore < ORE_EPSILON) {
 			return false;
 		}
+		
+//		boolean isInFirstLine = true;	//TODO implement
+//		if (ore < ORE_EPSILON && isInFirstLine)
+//		{
+//			return false;
+//		}
+		
 		if (rc.isCoreReady()) {
 			rc.mine();
 		}
