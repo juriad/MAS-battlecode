@@ -53,15 +53,33 @@ public class Objectives {
 	}
 
 	public RobotType spawnOrBuild(RobotType type) {
+		//ze zacatku vyrob factory a beavery
+		if (Clock.getRoundNum() < 250){
+			switch (type) {
+			case HQ:
+				return wantToBuild(RobotType.BEAVER);
+			case BEAVER:
+				return RobotType.MINERFACTORY;
+			case MINERFACTORY:
+				return wantToBuild(RobotType.MINER);
+			default:	
+				return null;
+			}
+			
+		}
 		if (Clock.getRoundNum() > 250 && rc.getTeamOre() < 500) {
 			return null;
 		}
 		if (!type.isBuilding){ //only moving thing that builds
+			for (RobotType robotType : buildables) {
+				System.out.println(robotType.toString());
+			}
 			if (type == RobotType.BEAVER){
 				int index = Rand.nextInt(buildablesCount);
 				RobotType rt = buildables[index];
 				return wantToBuild(rt);
 			}
+			
 			return null;
 		}
 
