@@ -6,7 +6,7 @@ import battlecode.common.MapLocation;
 import battlecode.common.RobotController;
 import battlecode.common.RobotType;
 
-public abstract class AttackingBot extends MovingBot {
+public class AttackingBot extends MovingBot {
 
 	public AttackingBot(RobotController rc) {
 		super(rc);
@@ -17,7 +17,7 @@ public abstract class AttackingBot extends MovingBot {
 		
 		MapLocation target = null;
 		if (rc.getType() != RobotType.BASHER){
-				attackLeastHealtyEnemyInRange();
+			attackLeastHealtyEnemyInRange();
 		}
 
 		if (target == null) {

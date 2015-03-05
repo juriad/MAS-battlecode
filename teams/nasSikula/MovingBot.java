@@ -10,7 +10,7 @@ import battlecode.common.TerrainTile;
 
 public abstract class MovingBot extends BaseBot {
 	protected static final double DEAD_ORE_EPSILON = 0.4;
-	protected static final double ORE_EPSILON = 0.9;
+	protected static final double ORE_EPSILON = 1.5;
 
 	private static final int SINCE_SPAWN_RUN_AWAY = 8;
 	private int sinceSpawn = 0;

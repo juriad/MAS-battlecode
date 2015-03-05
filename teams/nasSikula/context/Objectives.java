@@ -12,11 +12,12 @@ public class Objectives {
 	
 	private static final int buildablesCount = 9;
 	public static final RobotType[] buildables = new RobotType[buildablesCount];
-	
+	private static int numberOfRounds;
 
 	public static void init(RobotController rc) throws Exception {
 		OBJECTIVES = new Objectives(rc);
 		Rand = new Random();
+		numberOfRounds = rc.getRoundLimit();
 		
 		int i = 0;
 		for (RobotType rt : RobotType.values()) {
@@ -27,7 +28,7 @@ public class Objectives {
 		}		
 	}
 
-	public static final double SOLDIER_BASHER_RATE = 0.7;
+	public static final double SOLDIER_BASHER_RATE = 0.8;
 
 	private final RobotController rc;
 
@@ -55,51 +56,124 @@ public class Objectives {
 		if (Clock.getRoundNum() > 250 && rc.getTeamOre() < 500) {
 			return null;
 		}
+		if (!type.isBuilding){ //only moving thing that builds
+			if (type == RobotType.BEAVER){
+				int index = Rand.nextInt(buildablesCount);
+				RobotType rt = buildables[index];
+				return wantToBuild(rt);
+			}
+			return null;
+		}
 
 		switch (type) {
 		case HQ:
 			return wantToBuild(RobotType.BEAVER);
 		case TOWER: // nothing
 			break;
-		case BEAVER:
-			int index = Rand.nextInt(buildablesCount);
-			RobotType rt = buildables[index];
-			return wantToBuild(rt);
+			
 		case MINERFACTORY:
 			return wantToBuild(RobotType.MINER);
-		case MINER: // nothing
-			break;
+
 		case BARRACKS:
 			if (Math.random() < SOLDIER_BASHER_RATE) {
-				return RobotType.SOLDIER;
+				return wantToBuild(RobotType.SOLDIER);
 			} else {
-				return RobotType.BASHER;
+				return wantToBuild(RobotType.BASHER);
 			}
-		case SOLDIER: // nothing
-			break;
+		
 		case TANKFACTORY:
-			return RobotType.TANK;
-		case TANK: // nothing
-			break;
-		case SUPPLYDEPOT: // nothing
-			break;
-		case HANDWASHSTATION: // nothing
-			break;
+			return RobotType.TANK;	
 
 		case AEROSPACELAB:
+			return RobotType.LAUNCHER;
+			
+		case HELIPAD:
+			return RobotType.DRONE;
+		case LAUNCHER:
+			return RobotType.MISSILE;
+		
+			
+		case TECHNOLOGYINSTITUTE:
 			break;
+		case TRAININGFIELD:
+			break;
+			
+		default:
+			break;
+			
+		case MINER: // nothing
+		case SOLDIER: 
+		case TANK: 
 		case BASHER:
-			break;
 		case COMMANDER:
+		case DRONE:
+		case MISSILE:
+			
+		case SUPPLYDEPOT: 
+		case HANDWASHSTATION:
+		case COMPUTER:
+			return null;
+		}
+		return null;
+	}
+
+	
+	
+	public int getOptimalNumber(RobotType type) {// kolik by jich ted melo byt
+		switch (type) {
+		case HQ:
+		case TOWER:
+			return Integer.MIN_VALUE;
+			
+		case BEAVER:
+			return 30;// 5 + getOptimalNumber(RobotType.MINER) * 2;
+		case SOLDIER:
+			return Integer.MAX_VALUE;
+		case BASHER:
+			return Integer.MAX_VALUE;
+		case TANK:
+			return Integer.MAX_VALUE;
+			
+		case MINER:
+			// System.out.println(10 + Registry.ROBOT_COUNT.getSum() / 5);
+			// return 10 + Registry.ROBOT_COUNT.getSum() / 5;
+			return 100;
+			
+		case MINERFACTORY:
+			return (int) Math.log(Registry.ROBOT_COUNT
+					.getCount(RobotType.MINER) + 3);
+			
+		
+		case BARRACKS:
+			return 2 + (int) Math.log(Registry.ROBOT_COUNT
+					.getCount(RobotType.SOLDIER) + 3);
+		
+		case TANKFACTORY:
+			if (rc.hasBuildRequirements(RobotType.TANKFACTORY)) {// it costs 500
+				return (int) Math.log(Registry.ROBOT_COUNT
+						.getCount(RobotType.TANK) + 3);
+			}
 			break;
+
+		case SUPPLYDEPOT:
+			return 1 + (int) (Math.log(Registry.ROBOT_COUNT
+					.getCount(RobotType.SOLDIER) + 3) / 4);
+		
+		case HANDWASHSTATION:
+			return buildInLastMinute();
+
+		case AEROSPACELAB:
+			return 3;
+		case COMMANDER:
+			return 1;
 		case COMPUTER:
 			break;
 		case DRONE:
-			break;
+			return Integer.MAX_VALUE;
 		case HELIPAD:
-			break;
+			return 3;
 		case LAUNCHER:
-			break;
+			return Integer.MAX_VALUE;
 		case MISSILE:
 			break;
 		case TECHNOLOGYINSTITUTE:
@@ -109,72 +183,16 @@ public class Objectives {
 		default:
 			break;
 		}
-		return null;
+		return 0;
 	}
 
-	public int getOptimalNumber(RobotType type) {// kolik by jich ted melo byt
-		switch (type) {
-		case HQ:
-			return Integer.MIN_VALUE;
-		case TOWER:
-			return Integer.MIN_VALUE;
-		case BEAVER:
-			return 30;// 5 + getOptimalNumber(RobotType.MINER) * 2;
-		case MINERFACTORY:
-			System.out.println("chci mit x MINERFACTORY "
-					+ (int) Math.log(Registry.ROBOT_COUNT
-							.getCount(RobotType.MINER) + 3));
-			return (int) Math.log(Registry.ROBOT_COUNT
-					.getCount(RobotType.MINER) + 3);
-		case MINER:
-			// System.out.println(10 + Registry.ROBOT_COUNT.getSum() / 5);
-			// return 10 + Registry.ROBOT_COUNT.getSum() / 5;
-			return 100;
-		case BARRACKS:
-			return 2 + (int) Math.log(Registry.ROBOT_COUNT
-					.getCount(RobotType.SOLDIER) + 3);
-		case SOLDIER:
-			return Integer.MAX_VALUE;
-		case BASHER:
-			return Integer.MAX_VALUE;
-		case TANKFACTORY:
-			if (rc.hasBuildRequirements(RobotType.TANKFACTORY)) {// it costs 500
-				return (int) Math.log(Registry.ROBOT_COUNT
-						.getCount(RobotType.TANK) + 3);
-			}
-			break;
-		case TANK:
-			return Integer.MAX_VALUE;
-		case SUPPLYDEPOT:
-			return 1 + (int) (Math.log(Registry.ROBOT_COUNT
-					.getCount(RobotType.SOLDIER) + 3) / 4);
-		case HANDWASHSTATION:
-			int whenToStart = 150;
-			if (Clock.getRoundNum() + whenToStart >= rc.getRoundLimit()) {
-				return 5;
-			}
-			break;
-
-		case AEROSPACELAB:
-			break;
-		case COMMANDER:
-			break;
-		case COMPUTER:
-			break;
-		case DRONE:
-			return Integer.MAX_VALUE;
-		case HELIPAD:
-			break;
-		case LAUNCHER:
-			return Integer.MAX_VALUE;
-		case MISSILE:
-			break;
-		case TECHNOLOGYINSTITUTE:
-			break;
-		case TRAININGFIELD:
-			break;
-		default:
-			break;
+	private int buildInLastMinute(){
+		int whenToStart = 150;
+		int round = Clock.getRoundNum();
+		//if no damage
+		if ((round + whenToStart) >= numberOfRounds && round <= (numberOfRounds - 100) ) {
+			//System.out.println("\n\n\n\n\nround: " + round + " whenToStart: " + whenToStart + " numberOfRounds: "+ numberOfRounds);
+			return 5;
 		}
 		return 0;
 	}

@@ -14,42 +14,37 @@ public class RobotPlayer {
 			return new Tower(rc);
 		case BEAVER:
 			return new Beaver(rc);
-
-		case MINERFACTORY:
-			return new Factory(rc);
 		case MINER:
 			return new Miner(rc);
-
-		case BARRACKS:
-			return new Factory(rc);
 		case SOLDIER:
 			return new Soldier(rc);
 		case BASHER:
 			return new Basher(rc);
-
-		case TANKFACTORY:
-			return new Factory(rc);
 		case TANK:
 			return new Tank(rc);
 
+		case BARRACKS:
+		case MINERFACTORY:
+		case TANKFACTORY:
+		case HELIPAD:
+		case AEROSPACELAB:
+			return new Factory(rc);
+			
 		case SUPPLYDEPOT:
-			return new NoOpBot(rc);
 		case HANDWASHSTATION:
 			return new NoOpBot(rc);
 
-		case AEROSPACELAB:
-			break;
-		case COMMANDER:
-			break;
-		case COMPUTER:
-			break;
 		case DRONE:
-			break;
-		case HELIPAD:
-			break;
+			//break;
 		case LAUNCHER:
-			break;
+			//break;
 		case MISSILE:
+			//break;			
+		case COMMANDER:
+			//break;
+			return new AttackingBot(rc);
+			
+		case COMPUTER:
 			break;
 		case TECHNOLOGYINSTITUTE:
 			break;

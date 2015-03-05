@@ -52,9 +52,16 @@ public abstract class BaseBot {
 		return getMoveDir(rc.getLocation().directionTo(dest));
 	}
 
-	public Direction getSpawnDirection(RobotType type) {
+	public Direction getSpawnDirection(RobotType type) {//TODO na kazdou stranu muzou vylezt - tohle asi ze zacatku zdrzuje
 		Direction dir = rc.getLocation().directionTo(theirHQ);
 		Direction[] dirs = getDirectionsToward(dir);
+		for (Direction d : dirs) {
+			if (rc.canSpawn(d, type)) {
+				return d;
+			}
+		}
+		dir = theirHQ.directionTo(rc.getLocation());//get opposite
+		dirs = getDirectionsToward(dir);
 		for (Direction d : dirs) {
 			if (rc.canSpawn(d, type)) {
 				return d;
@@ -85,11 +92,12 @@ public abstract class BaseBot {
 		return enemies;
 	}
 
-	public MapLocation getLeastHealthEnemy(RobotInfo[] enemies) throws GameActionException {
+	public MapLocation getLeastHealthEnemy(RobotInfo[] enemies)
+			throws GameActionException {
 		if (enemies.length == 0) {
 			return null;
 		}
-		
+
 		double minEnergon = Double.MAX_VALUE;
 		MapLocation toAttack = null;
 		for (RobotInfo info : enemies) {
@@ -99,8 +107,9 @@ public abstract class BaseBot {
 			}
 		}
 		return toAttack;
-		
+
 	}
+
 	public MapLocation attackLeastHealthEnemy(RobotInfo[] enemies)
 			throws GameActionException {
 		MapLocation toAttack = getLeastHealthEnemy(enemies);
@@ -114,21 +123,26 @@ public abstract class BaseBot {
 	 * @throws GameActionException
 	 */
 	protected boolean spawnOrBuild() throws GameActionException {
-		RobotType spawnOrBuild = Objectives.OBJECTIVES.spawnOrBuild(type);
-		if (rc.isCoreReady() && spawnOrBuild != null) {
-			if (spawnOrBuild.isBuilding && canBuildHere()) {
-				Direction direction = getBuildDirection(spawnOrBuild);
-				if (direction != null) {
-					rc.build(direction, spawnOrBuild);
-					Registry.ROBOT_COUNT.increase(spawnOrBuild, 1);
-					return true;
-				}
-			} else if (!spawnOrBuild.isBuilding) {
-				Direction direction = getSpawnDirection(spawnOrBuild);
-				if (direction != null) {
-					rc.spawn(direction, spawnOrBuild);
-					Registry.ROBOT_COUNT.increase(spawnOrBuild, 1);
-					return true;
+		if (rc.isCoreReady()) {
+			RobotType spawnOrBuild = Objectives.OBJECTIVES.spawnOrBuild(type);
+			if (spawnOrBuild != null) {
+
+				if (!spawnOrBuild.isBuilding) {
+					Direction direction = getSpawnDirection(spawnOrBuild);
+					if (direction != null) {
+						rc.spawn(direction, spawnOrBuild);
+						
+						Registry.ROBOT_COUNT.increase(spawnOrBuild, 1);
+						return true;
+					}
+				} else if (canBuildHere()) {
+					Direction direction = getBuildDirection(spawnOrBuild);
+					if (direction != null) {
+						rc.build(direction, spawnOrBuild);
+						
+						Registry.ROBOT_COUNT.increase(spawnOrBuild, 1);
+						return true;
+					}
 				}
 			}
 		}
