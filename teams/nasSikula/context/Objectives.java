@@ -45,8 +45,8 @@ public class Objectives {
 		int optimalNumber = getOptimalNumber(robot);
 		int currentNumber = Registry.ROBOT_COUNT.getCount(robot);
 		if (optimalNumber > currentNumber) {
-			System.out.println("want to build " + robot + " I have "
-					+ currentNumber + " I want to have " + optimalNumber);
+			System.out.println("want to build " + robot + " we have "
+					+ currentNumber + "/" + optimalNumber);
 			return robot;
 		}
 		return null;
@@ -71,9 +71,9 @@ public class Objectives {
 			return null;
 		}
 		if (!type.isBuilding){ //only moving thing that builds
-			for (RobotType robotType : buildables) {
-				System.out.println(robotType.toString());
-			}
+//			for (RobotType robotType : buildables) {
+//				System.out.println(robotType.toString());
+//			}
 			if (type == RobotType.BEAVER){
 				int index = Rand.nextInt(buildablesCount);
 				RobotType rt = buildables[index];
