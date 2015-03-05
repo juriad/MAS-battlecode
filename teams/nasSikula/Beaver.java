@@ -13,10 +13,10 @@ public class Beaver extends Miner {
 
 	public void execute() throws GameActionException {
 		if (getAttackDirection() != Direction.NONE) {
-			runToSafety();
+			runToSafety();//15 tank
 			//TODO or attack
 			
-//			Name	Cost	HP	Attack	Range
+//			Name	Cost				HP	Attack	Range
 //			Beaver	100 ore, 20 turns	30	4	5
 //			Miner	60 ore, 20 turns	50	3	5
 //			Soldier	60 ore, 20 turns	40	4	8

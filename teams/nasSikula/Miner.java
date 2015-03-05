@@ -15,6 +15,8 @@ public class Miner extends MovingBot {
 	
 	@Override
 	public void execute() throws GameActionException {
+		//getEnemiesInAttackingRange() -THEIR
+		//TODO tohle je moc hruby, chce se to vyhybat s predstihem - ted to vypada tak ze umira pod vezi
 		if (getAttackDirection() != Direction.NONE) {
 			runToSafety();
 		} else {

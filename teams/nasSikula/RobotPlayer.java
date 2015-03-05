@@ -9,7 +9,7 @@ public class RobotPlayer {
 	public static BaseBot convert(RobotController rc) {
 		switch (rc.getType()) {
 		case HQ:
-			return new HQ(rc);
+			return new HQ(rc).init();
 		case TOWER:
 			return new Tower(rc);
 		case BEAVER:

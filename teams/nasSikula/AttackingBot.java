@@ -5,6 +5,7 @@ import battlecode.common.GameActionException;
 import battlecode.common.MapLocation;
 import battlecode.common.RobotController;
 import battlecode.common.RobotType;
+import battlecode.common.Team;
 
 public class AttackingBot extends MovingBot {
 
@@ -16,12 +17,30 @@ public class AttackingBot extends MovingBot {
 	public void execute() throws GameActionException {
 		
 		MapLocation target = null;
-		if (rc.getType() != RobotType.BASHER){
-			attackLeastHealtyEnemyInRange();
-		} else {
-			//TODO pri attacku musi byt na 2 kroky blizko (na konci tahu) od mista na ktere utoci
-			//soucasna strategie neutoci...
+		RobotType rt = rc.getType();
+		
+		switch (rt){
+			case BASHER:
+				//TODO pri attacku musi byt na 2 kroky blizko (na konci tahu) od mista na ktere utoci
+				//soucasna strategie neutoci...
+				break;
+			case LAUNCHER:
+				//if (rc.senseNearbyRobots(rt.attackRadiusSquared, theirTeam));
+				MapLocation tower = getNearestTower(rc, myTeam);
+				if (rc.getLocation().distanceSquaredTo(tower) > 3){
+					moveTowards(tower, false);
+				}
+				Direction dir = getAttackDirection();
+				if(rc.canLaunch(dir))
+					if (rc.getMissileCount() > 0)
+						rc.launchMissile(dir);
+				
+			default:
+				attackLeastHealtyEnemyInRange();
+				break;
 		}
+		
+
 
 		if (target == null) {
 			Direction initialMoveDirection = getInitialMoveDirection();
@@ -36,4 +55,6 @@ public class AttackingBot extends MovingBot {
 		transferSupplies();
 		rc.yield();
 	}
+
+
 }

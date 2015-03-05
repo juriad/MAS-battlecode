@@ -6,6 +6,7 @@ import battlecode.common.GameActionException;
 import battlecode.common.MapLocation;
 import battlecode.common.RobotController;
 import battlecode.common.RobotInfo;
+import battlecode.common.Team;
 import battlecode.common.TerrainTile;
 
 public abstract class MovingBot extends BaseBot {
@@ -198,5 +199,21 @@ public abstract class MovingBot extends BaseBot {
 
 	protected double get_ore_epsilon() {
 		return 0;
+	}
+	
+	protected MapLocation getNearestTower(RobotController rc, Team t) {
+		MapLocation[] towers = (t == myTeam) ? rc.senseTowerLocations():rc.senseEnemyTowerLocations();
+		int minSize = Integer.MAX_VALUE;
+		MapLocation minLoc = null;
+		MapLocation I = rc.getLocation();
+		for (MapLocation tower : towers) {
+			int dist = I.distanceSquaredTo(tower);
+			if(dist < minSize)
+			{
+				minSize = dist;
+				minLoc = tower;
+			}
+		}
+		return minLoc;
 	}
 }
