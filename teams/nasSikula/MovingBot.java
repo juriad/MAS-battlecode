@@ -115,24 +115,24 @@ public abstract class MovingBot extends BaseBot {
 		System.arraycopy(dirs, 0, out, 0, index);
 		return out;
 	}
-	
+
 	/**
 	 * 
 	 * @return if we shoot
 	 * @throws GameActionException
 	 */
-	protected boolean attackLeastEnemiesInAttackingRange() throws GameActionException{
-		
+	protected boolean attackLeastEnemiesInAttackingRange()
+			throws GameActionException {
 
 		RobotInfo[] enemies = getEnemiesInAttackingRange();
-	
+
 		if (enemies.length > 0) {
 			// attack!
 			if (rc.isWeaponReady()) {
 				attackLeastHealthEnemy(enemies);
 				return true;
 			}
-		} 
+		}
 		return false;
 	}
 
@@ -181,7 +181,7 @@ public abstract class MovingBot extends BaseBot {
 			}
 		}
 
-		if (opt != null) {
+		if (opt != null && rc.isCoreReady()) {
 			rc.move(opt);
 			return true;
 		}
