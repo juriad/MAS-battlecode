@@ -144,7 +144,7 @@ public class Objectives {
 			return Integer.MIN_VALUE;
 			
 		case BEAVER:
-			return 30;// 5 + getOptimalNumber(RobotType.MINER) * 2;
+			return 10;// 5 + getOptimalNumber(RobotType.MINER) * 2;
 		case SOLDIER:
 			return Integer.MAX_VALUE;
 		case BASHER:
@@ -174,8 +174,17 @@ public class Objectives {
 			break;
 
 		case SUPPLYDEPOT:
-			return 1 + (int) (Math.log(Registry.ROBOT_COUNT
-					.getCount(RobotType.SOLDIER) + 3) / 4);
+			int depots = Registry.ROBOT_COUNT.getCount(RobotType.SUPPLYDEPOT);
+			int robots = Registry.ROBOT_COUNT.getTotalCount();
+			int consumption = robots*3; //spotreba cca - nevim jak je to s tim Cooldown
+			//HQ per turn is 100*(2+supply_depots^0.6) 
+			double generatedSupplyPerTurn = 100 * (2 + Math.pow(depots, 0.6));
+			//prumer na jendotku na tah je ~ 9 ale jsou tam ty cooldown tak pocitam treba 3x
+			if ((generatedSupplyPerTurn  / consumption) > 1){
+				return depots + 1;
+			}
+							
+			return 1 + (int) (Math.log(Registry.ROBOT_COUNT.getCount(RobotType.SOLDIER) + 3) / 4);
 		
 		case HANDWASHSTATION:
 			return buildInLastMinute();
@@ -187,11 +196,11 @@ public class Objectives {
 		case COMPUTER:
 			break;
 		case DRONE:
-			return Integer.MAX_VALUE;
+			return 5;
 		case HELIPAD:
 			return 3;
 		case LAUNCHER:
-			return Integer.MAX_VALUE;
+			return 5;
 		case MISSILE:
 			break;
 		case TECHNOLOGYINSTITUTE:

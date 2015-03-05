@@ -10,7 +10,9 @@ public class Miner extends MovingBot {
 	public Miner(RobotController rc) {
 		super(rc);
 	}
-
+	
+	private double ORE_EPSILON = 0.8;
+	
 	@Override
 	public void execute() throws GameActionException {
 		if (getAttackDirection() != Direction.NONE) {

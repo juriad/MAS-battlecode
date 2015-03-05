@@ -9,8 +9,10 @@ import battlecode.common.RobotInfo;
 import battlecode.common.TerrainTile;
 
 public abstract class MovingBot extends BaseBot {
+	// ORE s 4 ma uz se tezi stejne pomalu jako s 0.0001 (beaver) a 0.8 pro minera
+	
 	protected static final double DEAD_ORE_EPSILON = 0.4;
-	protected static final double ORE_EPSILON = 1.5;
+	protected static final double ORE_EPSILON = 4;
 
 	private static final int SINCE_SPAWN_RUN_AWAY = 8;
 	private int sinceSpawn = 0;
