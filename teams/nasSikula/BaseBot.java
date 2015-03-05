@@ -160,5 +160,9 @@ public abstract class BaseBot {
 		}
 	}
 
+	protected Direction getRandomDirection() {
+		return Direction.values()[rand.nextInt(8)];
+	}
+
 	public abstract void execute() throws GameActionException;
 }

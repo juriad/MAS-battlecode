@@ -5,7 +5,7 @@ import battlecode.common.GameActionException;
 import battlecode.common.MapLocation;
 import battlecode.common.RobotController;
 
-public class Miner extends BaseBot {
+public class Miner extends MovingBot {
 
 	private static final double ORE_EPSILON = 0.9;
 

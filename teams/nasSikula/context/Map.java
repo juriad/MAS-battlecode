@@ -72,7 +72,7 @@ public class Map extends RegistryClass {
 		set(ml, i);
 	}
 
-	public boolean getAttackerDeadEnd(MapLocation ml) {
+	public boolean isAttackerDeadEnd(MapLocation ml) {
 		int i = get(ml);
 		return (i & 0b000_00001) == 1;
 	}
@@ -83,7 +83,7 @@ public class Map extends RegistryClass {
 		set(ml, i);
 	}
 
-	public boolean getMiningDeadEnd(MapLocation ml) {
+	public boolean isMiningDeadEnd(MapLocation ml) {
 		int i = get(ml);
 		return (i & 0b000_00010) == 1;
 	}

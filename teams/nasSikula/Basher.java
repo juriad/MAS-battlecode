@@ -3,7 +3,7 @@ package nasSikula;
 import battlecode.common.GameActionException;
 import battlecode.common.RobotController;
 
-public class Basher extends AttackingBot {
+public class Basher extends MovingBot {
 
 	public Basher(RobotController rc) {
 		super(rc);

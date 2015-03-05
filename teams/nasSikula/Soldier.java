@@ -2,31 +2,20 @@ package nasSikula;
 
 import battlecode.common.Direction;
 import battlecode.common.GameActionException;
-import battlecode.common.MapLocation;
 import battlecode.common.RobotController;
 
-public class Soldier extends AttackingBot {
-	
+public class Soldier extends MovingBot {
+
 	public Soldier(RobotController rc) {
 		super(rc);
 	}
 
-	private int xMoveFromStart = 5;
-
 	public void execute() throws GameActionException {
-		if (xMoveFromStart < 0) {// ze zacatku popobehni
-			xMoveFromStart--;
-			MapLocation theirHQ = rc.senseEnemyHQLocation();
-			Direction toDest = rc.getLocation().directionTo(theirHQ);
-			if (toDest == null) {
-				toDest = Direction.OMNI;
-			}
-			if (toDest == Direction.OMNI) {
-				rand.nextInt(8);// TODO random smer
-				toDest = Direction.SOUTH_EAST;
-			}
-
-			rc.move(toDest);
+		Direction initialMoveDirection = getInitialMoveDirection();
+		if (initialMoveDirection != Direction.NONE && rc.isCoreReady()) {
+			rc.move(initialMoveDirection);
+		} else {
+			markDeadEnd();
 		}
 
 		transferSupplies();
