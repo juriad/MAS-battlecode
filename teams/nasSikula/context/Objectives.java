@@ -21,7 +21,7 @@ public class Objectives {
 
 	public RobotType spawnOrBuild(RobotType type) {
 		int optimalNumber;
-		if (rc.getTeamOre() < 500){
+		if (Clock.getRoundNum() > 50 && rc.getTeamOre() < 500){
 			return null;
 		}
 			
@@ -105,12 +105,12 @@ public class Objectives {
 		case BEAVER:
 			return 5 + getOptimalNumber(RobotType.MINER) * 2;
 		case MINERFACTORY:
-			System.out.println("chci vyrobit x MINERFACTORY " + (int) Math.log(Registry.ROBOT_COUNT
+			System.out.println("chci mit x MINERFACTORY " + (int) Math.log(Registry.ROBOT_COUNT
 					.getCount(RobotType.MINER) + 3));
 			return (int) Math.log(Registry.ROBOT_COUNT
 					.getCount(RobotType.MINER) + 3);
 		case MINER:
-			return 10 + Registry.ROBOT_COUNT.getCount(RobotType.SOLDIER) / 5;
+			return 10 +90; //+ Registry.ROBOT_COUNT. / 5; //TODO
 		case BARRACKS:
 			return 2 + (int) Math.log(Registry.ROBOT_COUNT
 					.getCount(RobotType.SOLDIER) + 3);
