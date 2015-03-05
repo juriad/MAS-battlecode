@@ -66,7 +66,8 @@ public class Miner extends MovingBot {
 	 */
 	protected boolean mine() throws GameActionException {
 		double ore = rc.senseOre(rc.getLocation());
-		if (ore < MIN_ORE_EPSILON) {
+		//if (ore < MIN_ORE_EPSILON) {
+		if (ore < ORE_EPSILON) {
 			return false;
 		}
 		

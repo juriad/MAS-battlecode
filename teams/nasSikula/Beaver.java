@@ -38,7 +38,7 @@ public class Beaver extends Miner {
 		if (spawnOrBuild == null) {
 			return false;
 		}
-		System.out.println("Want to build " + spawnOrBuild);// TODO dat do logu
+		//System.out.println("Want to build " + spawnOrBuild);// TODO dat do logu
 															// tak aby to slo
 															// vypnout
 
