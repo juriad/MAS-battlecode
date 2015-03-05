@@ -5,6 +5,7 @@ import battlecode.common.Direction;
 import battlecode.common.GameActionException;
 import battlecode.common.MapLocation;
 import battlecode.common.RobotController;
+import battlecode.common.RobotInfo;
 import battlecode.common.TerrainTile;
 
 public abstract class MovingBot extends BaseBot {
@@ -114,4 +115,25 @@ public abstract class MovingBot extends BaseBot {
 		System.arraycopy(dirs, 0, out, 0, index);
 		return out;
 	}
+	
+	/**
+	 * 
+	 * @return if we shoot
+	 * @throws GameActionException
+	 */
+	protected boolean attackLeastEnemiesInAttackingRange() throws GameActionException{
+		
+
+		RobotInfo[] enemies = getEnemiesInAttackingRange();
+	
+		if (enemies.length > 0) {
+			// attack!
+			if (rc.isWeaponReady()) {
+				attackLeastHealthEnemy(enemies);
+				return true;
+			}
+		} 
+		return false;
+	}
+
 }

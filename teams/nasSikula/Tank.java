@@ -9,10 +9,4 @@ public class Tank extends AttackingBot {
 		super(rc);
 	}
 
-	@Override
-	public void execute() throws GameActionException {
-		transferSupplies();
-		rc.yield();
-	}
-
 }

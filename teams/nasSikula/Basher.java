@@ -9,10 +9,4 @@ public class Basher extends AttackingBot {
 		super(rc);
 	}
 
-	@Override
-	public void execute() throws GameActionException {
-		transferSupplies();
-		rc.yield();
-	}
-
 }
