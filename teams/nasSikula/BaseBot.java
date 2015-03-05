@@ -3,6 +3,7 @@ package nasSikula;
 import java.util.Random;
 
 import nasSikula.context.Objectives;
+import nasSikula.context.Registry;
 import battlecode.common.Direction;
 import battlecode.common.GameActionException;
 import battlecode.common.GameConstants;
@@ -111,15 +112,27 @@ public abstract class BaseBot {
 		if (rc.isCoreReady() && spawnOrBuild != null) {
 			Direction direction = getSpawnDirection(spawnOrBuild);
 			if (direction != null) {
-				if (spawnOrBuild.isBuilding) {
+				if (spawnOrBuild.isBuilding && canBuildHere()) {
 					rc.build(direction, spawnOrBuild);
 				} else {
 					rc.spawn(direction, spawnOrBuild);
 				}
+				Registry.ROBOT_COUNT.increase(spawnOrBuild, 1);
 				return true;
 			}
 		}
 		return false;
+	}
+
+	private boolean canBuildHere() {
+		RobotInfo[] nearby = rc.senseNearbyRobots(4);
+		int buildings = 0;
+		for (RobotInfo ri : nearby) {
+			if (ri.type.isBuilding) {
+				buildings++;
+			}
+		}
+		return buildings == 0;
 	}
 
 	/**

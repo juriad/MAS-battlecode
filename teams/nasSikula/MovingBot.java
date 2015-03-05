@@ -16,7 +16,6 @@ public abstract class MovingBot extends BaseBot {
 
 	public MovingBot(RobotController rc) {
 		super(rc);
-
 	}
 
 	/**

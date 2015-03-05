@@ -1,6 +1,8 @@
 package nasSikula.context;
 
+import battlecode.common.GameActionException;
 import battlecode.common.RobotController;
+import battlecode.common.RobotInfo;
 
 public abstract class Captain extends RegistryClass {
 
@@ -12,33 +14,45 @@ public abstract class Captain extends RegistryClass {
 
 	@Override
 	int getSize() {
-		return 200; // to be sure :-)
+		return 400; // to be sure :-)
 	}
 
-	private boolean captain = false;
+	private int group = -1;
 
 	public boolean amICaptain() {
-		return captain;
-	}
-/*
-	public int readMessageFromCaptain() {
-
+		return getCaptain().ID == rc.getID();
 	}
 
-	public void writeMessageAsCaptain() {
-		if (!amICaptain()) {
-			return;
+	public int getGroup() {
+		if (group == -1) {
+			group = (int) (rc.getID() % Math.sqrt(getCount()));
+		}
+		return group;
+	}
+
+	public RobotInfo getCaptain() {
+		int capId = read(getGroup() * 2);
+		try {
+			return rc.senseRobot(capId);
+		} catch (Exception e) {
+			RobotInfo me = null;
+			try {
+				me = rc.senseRobot(rc.getID());
+			} catch (GameActionException e1) {
+				// won't happen; that's me
+			}
+			write(getGroup() * 2, rc.getID());
+			return me;
 		}
 	}
 
-	public int getGroupSize() {
+	public void writeInfo(int info) {
+		if (amICaptain()) {
+			write(getGroup() * 2 + 1, info);
+		}
 	}
 
-	public int getCaptainsNumber() {
+	public int readInfo() {
+		return read(getGroup() * 2 + 1);
 	}
-
-	public int resign() {
-		
-	}
-	*/
 }

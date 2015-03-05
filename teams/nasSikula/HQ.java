@@ -18,6 +18,7 @@ public class HQ extends Tower {
 		for (RobotInfo ri : allies) {
 			counts[ri.type.ordinal()]++;
 		}
+		Registry.ROBOT_COUNT.reset();
 		for (RobotType rt : RobotType.values()) {
 			Registry.ROBOT_COUNT.setCount(rt, counts[rt.ordinal()]);
 		}
