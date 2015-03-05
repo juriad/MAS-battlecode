@@ -85,12 +85,11 @@ public abstract class BaseBot {
 		return enemies;
 	}
 
-	public void attackLeastHealthEnemy(RobotInfo[] enemies)
-			throws GameActionException {
+	public MapLocation getLeastHealthEnemy(RobotInfo[] enemies) throws GameActionException {
 		if (enemies.length == 0) {
-			return;
+			return null;
 		}
-
+		
 		double minEnergon = Double.MAX_VALUE;
 		MapLocation toAttack = null;
 		for (RobotInfo info : enemies) {
@@ -99,8 +98,15 @@ public abstract class BaseBot {
 				minEnergon = info.health;
 			}
 		}
-
-		rc.attackLocation(toAttack);
+		return toAttack;
+		
+	}
+	public MapLocation attackLeastHealthEnemy(RobotInfo[] enemies)
+			throws GameActionException {
+		MapLocation toAttack = getLeastHealthEnemy(enemies);
+		if (toAttack != null)
+			rc.attackLocation(toAttack);
+		return toAttack;
 	}
 
 	/**

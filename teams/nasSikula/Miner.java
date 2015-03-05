@@ -7,9 +7,6 @@ import battlecode.common.RobotController;
 
 public class Miner extends MovingBot {
 
-	private static final double MIN_ORE_EPSILON = 0.2;
-	private static final double ORE_EPSILON = 0.9;
-
 	public Miner(RobotController rc) {
 		super(rc);
 	}
@@ -19,9 +16,7 @@ public class Miner extends MovingBot {
 		if (getAttackDirection() != Direction.NONE) {
 			runToSafety();
 		} else {
-			if (!mine()) {
-				moveTowards(towardsOre(), true);
-			}
+			mineOrMoveTowardsOre();
 		}
 		transferSupplies();
 		rc.yield();
@@ -45,28 +40,45 @@ public class Miner extends MovingBot {
 		return mapLocation;
 	}
 
-	/**
-	 * @return true if robot should stay
-	 * @throws GameActionException
-	 */
-	protected boolean mine() throws GameActionException {
+//	/**
+//	 * @return true if robot should stay
+//	 * @throws GameActionException
+//	 */
+//	protected boolean mine() throws GameActionException {
+//		double ore = rc.senseOre(rc.getLocation());
+//		
+//		if (ore < ORE_EPSILON) {
+//			return false;
+//		}
+//		
+//		if (rc.isCoreReady()) {
+//			rc.mine();
+//		}
+//		return true;
+//	}
+//	
+//	protected boolean forceMine() throws GameActionException {
+//		double ore = rc.senseOre(rc.getLocation());
+//		if (rc.isCoreReady()) {
+//			rc.mine();
+//			return true;
+//		}
+//		return false;
+//	}
+	
+	protected void mineOrMoveTowardsOre() throws GameActionException {
 		double ore = rc.senseOre(rc.getLocation());
-		// if (ore < MIN_ORE_EPSILON) {
 		if (ore < ORE_EPSILON) {
-			return false;
+			if (moveTowards(towardsOre(), true)){
+				//return true;
+			}
 		}
-
-		// boolean isInFirstLine = true; //TODO implement
-		// if (ore < ORE_EPSILON && isInFirstLine)
-		// {
-		// return false;
-		// }
-
 		if (rc.isCoreReady()) {
 			rc.mine();
 		}
-		return true;
+		//return false;
 	}
+
 
 	protected void runToSafety() throws GameActionException {
 		Direction attackDirection = getAttackDirection();

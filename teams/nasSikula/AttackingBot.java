@@ -2,7 +2,9 @@ package nasSikula;
 
 import battlecode.common.Direction;
 import battlecode.common.GameActionException;
+import battlecode.common.MapLocation;
 import battlecode.common.RobotController;
+import battlecode.common.RobotType;
 
 public abstract class AttackingBot extends MovingBot {
 
@@ -12,9 +14,13 @@ public abstract class AttackingBot extends MovingBot {
 	}
 
 	public void execute() throws GameActionException {
-		boolean attacking = attackLeastEnemiesInAttackingRange();
+		
+		MapLocation target = null;
+		if (rc.getType() != RobotType.BASHER){
+				attackLeastHealtyEnemyInRange();
+		}
 
-		if (!attacking) {
+		if (target == null) {
 			Direction initialMoveDirection = getInitialMoveDirection();
 			if (initialMoveDirection != Direction.NONE && rc.isCoreReady()) {
 				rc.move(initialMoveDirection);

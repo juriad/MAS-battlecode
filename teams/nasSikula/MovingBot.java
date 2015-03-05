@@ -9,7 +9,8 @@ import battlecode.common.RobotInfo;
 import battlecode.common.TerrainTile;
 
 public abstract class MovingBot extends BaseBot {
-	private static final double ORE_EMPTY_EPS = 0.4;
+	protected static final double DEAD_ORE_EPSILON = 0.4;
+	protected static final double ORE_EPSILON = 0.9;
 
 	private static final int SINCE_SPAWN_RUN_AWAY = 8;
 	private int sinceSpawn = 0;
@@ -76,7 +77,7 @@ public abstract class MovingBot extends BaseBot {
 			}
 		}
 
-		if (miningFree <= 1 && rc.senseOre(loc) < ORE_EMPTY_EPS) {
+		if (miningFree <= 1 && rc.senseOre(loc) < DEAD_ORE_EPSILON) {
 			Registry.MAP.setMiningDeadEnd(loc);
 		}
 
@@ -118,22 +119,24 @@ public abstract class MovingBot extends BaseBot {
 
 	/**
 	 * 
-	 * @return if we shoot
+	 * @return location of our target if there is one...
 	 * @throws GameActionException
 	 */
-	protected boolean attackLeastEnemiesInAttackingRange()
+	protected MapLocation attackLeastHealtyEnemyInRange()
 			throws GameActionException {
 
 		RobotInfo[] enemies = getEnemiesInAttackingRange();
 
 		if (enemies.length > 0) {
 			// attack!
+			MapLocation target = getLeastHealthEnemy(enemies);
+			
 			if (rc.isWeaponReady()) {
-				attackLeastHealthEnemy(enemies);
-				return true;
+				rc.attackLocation(target);			
 			}
+			return target;
 		}
-		return false;
+		return null;
 	}
 
 	/**

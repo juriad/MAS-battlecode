@@ -1,14 +1,30 @@
 package nasSikula.context;
 
+import java.util.Random;
+
 import battlecode.common.Clock;
 import battlecode.common.RobotController;
 import battlecode.common.RobotType;
 
 public class Objectives {
 	public static Objectives OBJECTIVES = null;
+	public static Random Rand = null;
+	
+	private static final int buildablesCount = 9;
+	public static final RobotType[] buildables = new RobotType[buildablesCount];
+	
 
-	public static void init(RobotController rc) {
+	public static void init(RobotController rc) throws Exception {
 		OBJECTIVES = new Objectives(rc);
+		Rand = new Random();
+		
+		int i = 0;
+		for (RobotType rt : RobotType.values()) {
+			if (rt.isBuildable()){
+				buildables[i] = rt;
+				i++;
+			}
+		}		
 	}
 
 	public static final double SOLDIER_BASHER_RATE = 0.7;
@@ -19,41 +35,38 @@ public class Objectives {
 		this.rc = rc;
 	}
 
+	/**
+	 * 
+	 * @param robot type
+	 * @return robot type or null
+	 */
+	private RobotType wantToBuild(RobotType robot) {
+		int optimalNumber = getOptimalNumber(robot);
+		int currentNumber = Registry.ROBOT_COUNT.getCount(robot);
+		if (optimalNumber > currentNumber) {
+			System.out.println("want to build " + robot + " I have "
+					+ currentNumber + " I want to have " + optimalNumber);
+			return robot;
+		}
+		return null;
+	}
+
 	public RobotType spawnOrBuild(RobotType type) {
-		int optimalNumber;
-		if (Clock.getRoundNum() > 250 && rc.getTeamOre() < 500){
+		if (Clock.getRoundNum() > 250 && rc.getTeamOre() < 500) {
 			return null;
 		}
-			
+
 		switch (type) {
 		case HQ:
-			optimalNumber = getOptimalNumber(RobotType.BEAVER);
-			if (optimalNumber > Registry.ROBOT_COUNT.getCount(RobotType.BEAVER)) {
-				return RobotType.BEAVER;
-			}
-			break;
+			return wantToBuild(RobotType.BEAVER);
 		case TOWER: // nothing
 			break;
 		case BEAVER:
-			for (RobotType rt : RobotType.values()) {
-				if (!rt.isBuildable() && Math.random() < 0.5) {//TODO vysvetlit co ma tohle delat
-					continue;
-				}
-				optimalNumber = getOptimalNumber(rt);
-				int currentNumber = Registry.ROBOT_COUNT.getCount(rt);
-				if (optimalNumber > currentNumber) {
-					System.out.println("want to build " + rt + " I have "
-									+currentNumber + " I want to have "+optimalNumber);
-					return rt;
-				}
-			}
-			break;
+			int index = Rand.nextInt(buildablesCount);
+			RobotType rt = buildables[index];
+			return wantToBuild(rt);
 		case MINERFACTORY:
-			optimalNumber = getOptimalNumber(RobotType.MINER);
-			if (optimalNumber > Registry.ROBOT_COUNT.getCount(RobotType.MINER)) {
-				return RobotType.MINER;
-			}
-			break;
+			return wantToBuild(RobotType.MINER);
 		case MINER: // nothing
 			break;
 		case BARRACKS:
@@ -106,15 +119,16 @@ public class Objectives {
 		case TOWER:
 			return Integer.MIN_VALUE;
 		case BEAVER:
-			return 20;//5 + getOptimalNumber(RobotType.MINER) * 2;
+			return 30;// 5 + getOptimalNumber(RobotType.MINER) * 2;
 		case MINERFACTORY:
-			System.out.println("chci mit x MINERFACTORY " + (int) Math.log(Registry.ROBOT_COUNT
-					.getCount(RobotType.MINER) + 3));
+			System.out.println("chci mit x MINERFACTORY "
+					+ (int) Math.log(Registry.ROBOT_COUNT
+							.getCount(RobotType.MINER) + 3));
 			return (int) Math.log(Registry.ROBOT_COUNT
 					.getCount(RobotType.MINER) + 3);
 		case MINER:
-			//System.out.println(10 + Registry.ROBOT_COUNT.getSum() / 5);
-			//return 10 + Registry.ROBOT_COUNT.getSum() / 5;
+			// System.out.println(10 + Registry.ROBOT_COUNT.getSum() / 5);
+			// return 10 + Registry.ROBOT_COUNT.getSum() / 5;
 			return 100;
 		case BARRACKS:
 			return 2 + (int) Math.log(Registry.ROBOT_COUNT
