@@ -10,15 +10,4 @@ public class Soldier extends AttackingBot {
 		super(rc);
 	}
 
-	public void execute() throws GameActionException {
-		Direction initialMoveDirection = getInitialMoveDirection();
-		if (initialMoveDirection != Direction.NONE && rc.isCoreReady()) {
-			rc.move(initialMoveDirection);
-		} else {
-			markDeadEnd();
-		}
-
-		transferSupplies();
-		rc.yield();
-	}
 }
