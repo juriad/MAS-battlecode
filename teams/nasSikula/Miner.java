@@ -20,22 +20,14 @@ public class Miner extends MovingBot {
 			runToSafety();
 		} else {
 			if (!mine()) {
-				moveTowardsOre();
+				moveTowards(towardsOre(), true);
 			}
 		}
 		transferSupplies();
 		rc.yield();
 	}
 
-	protected void moveTowardsOre() throws GameActionException {
-		Direction towardsOre = towardsOre();
-		Direction moveDir = getMoveDir(towardsOre);
-		if (rc.isCoreReady() && moveDir != null) {
-			rc.move(moveDir);
-		}
-	}
-
-	protected Direction towardsOre() throws GameActionException {
+	protected MapLocation towardsOre() throws GameActionException {
 		int x = rc.getLocation().x;
 		int y = rc.getLocation().y;
 		MapLocation[] locations = MapLocation.getAllMapLocationsWithinRadiusSq(
@@ -50,14 +42,7 @@ public class Miner extends MovingBot {
 			}
 		}
 		MapLocation mapLocation = new MapLocation(x, y);
-		MapLocation mapLocation2 = mapLocation
-				.add(Direction.values()[((int) (Math.random() * 100)) % 8]);
-
-		Direction dir = rc.getLocation().directionTo(mapLocation2);
-		if (dir == Direction.OMNI) {
-			dir = rc.getLocation().directionTo(mapLocation);
-		}
-		return dir;
+		return mapLocation;
 	}
 
 	/**
@@ -66,17 +51,17 @@ public class Miner extends MovingBot {
 	 */
 	protected boolean mine() throws GameActionException {
 		double ore = rc.senseOre(rc.getLocation());
-		//if (ore < MIN_ORE_EPSILON) {
+		// if (ore < MIN_ORE_EPSILON) {
 		if (ore < ORE_EPSILON) {
 			return false;
 		}
-		
-//		boolean isInFirstLine = true;	//TODO implement
-//		if (ore < ORE_EPSILON && isInFirstLine)
-//		{
-//			return false;
-//		}
-		
+
+		// boolean isInFirstLine = true; //TODO implement
+		// if (ore < ORE_EPSILON && isInFirstLine)
+		// {
+		// return false;
+		// }
+
 		if (rc.isCoreReady()) {
 			rc.mine();
 		}
