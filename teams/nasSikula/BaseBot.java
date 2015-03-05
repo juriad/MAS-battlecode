@@ -110,15 +110,20 @@ public abstract class BaseBot {
 	protected boolean spawnOrBuild() throws GameActionException {
 		RobotType spawnOrBuild = Objectives.OBJECTIVES.spawnOrBuild(type);
 		if (rc.isCoreReady() && spawnOrBuild != null) {
-			Direction direction = getSpawnDirection(spawnOrBuild);
-			if (direction != null) {
-				if (spawnOrBuild.isBuilding && canBuildHere()) {
+			if (spawnOrBuild.isBuilding && canBuildHere()) {
+				Direction direction = getBuildDirection(spawnOrBuild);
+				if (direction != null) {
 					rc.build(direction, spawnOrBuild);
-				} else {
-					rc.spawn(direction, spawnOrBuild);
+					Registry.ROBOT_COUNT.increase(spawnOrBuild, 1);
+					return true;
 				}
-				Registry.ROBOT_COUNT.increase(spawnOrBuild, 1);
-				return true;
+			} else if (!spawnOrBuild.isBuilding) {
+				Direction direction = getSpawnDirection(spawnOrBuild);
+				if (direction != null) {
+					rc.spawn(direction, spawnOrBuild);
+					Registry.ROBOT_COUNT.increase(spawnOrBuild, 1);
+					return true;
+				}
 			}
 		}
 		return false;

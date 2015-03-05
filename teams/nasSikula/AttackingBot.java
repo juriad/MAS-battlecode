@@ -14,5 +14,5 @@ public abstract class AttackingBot extends MovingBot {
 		
 	}
 
-	
+	//public 
 }
