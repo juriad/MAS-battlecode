@@ -30,6 +30,7 @@ public class AttackingBot extends MovingBot {
 				}
 				if (rc.isCoreReady())
 					rc.move(dir);
+				//TODO ulozit si ID toho po kom jdu - a nasleduj ho i dalsi tahy
 
 
 				break;
