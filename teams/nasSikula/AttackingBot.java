@@ -18,17 +18,18 @@ public class AttackingBot extends MovingBot {
 		
 		MapLocation target = null;
 		RobotType rt = rc.getType();
-		
+		Direction dir = null;
 		switch (rt){
 			case BASHER:
 				//MapLocation loc = getNearestEnemy(rc);
 				//pri attacku musi byt na 2 kroky blizko (na konci tahu) od mista na ktere utoci
-				Direction dir = getAttackDirection();
-				if (dir != Direction.NONE)
+				dir = getAttackDirection();
+				if ((dir == null)||(dir == Direction.NONE)||(dir == Direction.OMNI))
 				{
 					dir = rc.getLocation().directionTo(getNearestTower(rc, theirTeam));
 				}
-				rc.move(dir);
+				if (rc.isCoreReady())
+					rc.move(dir);
 
 
 				break;
@@ -38,7 +39,7 @@ public class AttackingBot extends MovingBot {
 				if (rc.getLocation().distanceSquaredTo(tower) > 3){
 					moveTowards(tower, false);
 				}
-				Direction dir = getAttackDirection();
+				dir = getAttackDirection();
 				if(rc.canLaunch(dir))
 					if (rc.getMissileCount() > 0)
 						rc.launchMissile(dir);
