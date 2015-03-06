@@ -91,6 +91,12 @@ public abstract class BaseBot {
 				theirTeam);
 		return enemies;
 	}
+	
+	public RobotInfo[] getEnemiesInTheirPossibleAttackingRange() {
+		RobotInfo[] enemies = rc.senseNearbyRobots(15,
+				theirTeam);
+		return enemies;
+	}
 
 	public MapLocation getLeastHealthEnemy(RobotInfo[] enemies)
 			throws GameActionException {
@@ -165,7 +171,7 @@ public abstract class BaseBot {
 	 */
 	protected Direction getAttackDirection() {
 		RobotInfo[] enemies = rc.senseNearbyRobots(
-				RobotType.SOLDIER.attackRadiusSquared, theirTeam);
+				RobotType.TANK.attackRadiusSquared, theirTeam);
 		if (enemies.length == 0) {
 			return Direction.NONE;
 		}

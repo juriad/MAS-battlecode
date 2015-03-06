@@ -216,4 +216,21 @@ public abstract class MovingBot extends BaseBot {
 		}
 		return minLoc;
 	}
+	
+	protected MapLocation getNearestEnemy(RobotController rc) {
+		RobotInfo[] enemies = rc.senseNearbyRobots(rc.getType().attackRadiusSquared, theirTeam);
+		int minSize = Integer.MAX_VALUE;
+		MapLocation minLoc = null;
+		MapLocation I = rc.getLocation();
+		for (RobotInfo enemy : enemies) {
+			MapLocation loc = enemy.location;
+			int dist = I.distanceSquaredTo(loc);
+			if(dist < minSize)
+			{
+				minSize = dist;
+				minLoc = loc;
+			}
+		}
+		return minLoc;
+	}
 }

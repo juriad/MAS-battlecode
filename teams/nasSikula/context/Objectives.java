@@ -68,40 +68,51 @@ public class Objectives {
 		return 0;
 	}
 
-	public RobotType getBuildingToBuild() {
+	public RobotType getBuildingToBuild2() {
 		//this is simple (uniform) distribution
-//		int index = Rand.nextInt(buildablesCount);
-//		RobotType rt = buildables[index];
-					
+		int index = Rand.nextInt(buildablesCount);
+		RobotType rt = buildables[index];
+		return rt;
+	}
+				
+	public RobotType getBuildingToBuild(){
+		evaluateBuildingsToBuild();//TODO put to HQ
 		
-		int sum = HQ.HQ.sumOfBuildings;
+		int sum = sumOfBuildings;
 		if (sum == 0){//we want to build something
 			return null;
 		}
-
+		
 		int index = Rand.nextInt(sum);
-		for (BuildBuilding building : HQ.HQ.listOfBuildingsProbabilities) {
+		for (BuildBuilding building : listOfBuildingsProbabilities) {
 			index -= building.howMany;
 			if (index <= 0){
-				building.howMany--;
-				HQ.HQ.sumOfBuildings--;
+				//pouze pokud mame zaruceno postaveni...
+//				building.howMany--;
+//				HQ.HQ.sumOfBuildings--;
+				
+				System.out.println(building.type);
+				
 				return building.type;
 			}
 		}
-		System.out.println("------------xxxxxxxxxxxxx------------xxxxxxxxxxxx------------xxxxxxxxxxx------");
-		System.out.println("------------xxxxxxxxxxxxx------------xxxxxxxxxxxx------------xxxxxxxxxxx------");
-		System.out.println("------------xxxxxxxxxxxxx------------xxxxxxxxxxxx------------xxxxxxxxxxx------");
-		System.out.println("------------xxxxxxxxxxxxx------------xxxxxxxxxxxx------------xxxxxxxxxxx------");
-		System.out.println("------------xxxxxxxxxxxxx------------xxxxxxxxxxxx------------xxxxxxxxxxx------");
-		System.out.println("------------xxxxxxxxxxxxx------------xxxxxxxxxxxx------------xxxxxxxxxxx------");
-		System.out.println("------------xxxxxxxxxxxxx------------xxxxxxxxxxxx------------xxxxxxxxxxx------");
-		System.out.println("------------xxxxxxxxxxxxx------------xxxxxxxxxxxx------------xxxxxxxxxxx------");
-		System.out.println("------------xxxxxxxxxxxxx------------xxxxxxxxxxxx------------xxxxxxxxxxx------");
-		System.out.println("------------xxxxxxxxxxxxx------------xxxxxxxxxxxx------------xxxxxxxxxxx------");
-		System.out.println("------------xxxxxxxxxxxxx------------xxxxxxxxxxxx------------xxxxxxxxxxx------");
-		System.out.println("----sem se to nedostane-------xxxxxxxxxxxxx------------xxxxxxxxxxxx------------xxxxxxxxxxx------");
+
 		
 		return null;
+	}
+	ArrayList<BuildBuilding> listOfBuildingsProbabilities;
+	int sumOfBuildings;
+	public void evaluateBuildingsToBuild(){
+		//TODO nejde to predavat takhle - nevim jak to ze se jim to povedlo - lze to predat staticky
+		listOfBuildingsProbabilities = new ArrayList<BuildBuilding>();
+		sumOfBuildings = 0;
+		for (RobotType rt : Objectives.OBJECTIVES.buildables) {
+			int count = Objectives.OBJECTIVES.howManyToBuild(rt);
+			if (count == 0)
+				continue;
+			sumOfBuildings += count;
+			listOfBuildingsProbabilities.add(new BuildBuilding(count, rt));
+		}
 	}
 	public RobotType spawnOrBuild(RobotType type) {
 		// ze zacatku vyrob factory a beavery
@@ -118,14 +129,15 @@ public class Objectives {
 			}
 
 		}
-		if (Clock.getRoundNum() > 250 && rc.getTeamOre() < 500) {
+		if (Clock.getRoundNum() > 250 && rc.getTeamOre() < 700) {
 			return null;
 		}
 		if (!type.isBuilding) { // prorezat moznosti
 			if (type == RobotType.BEAVER) {// only moving thing that builds
 				RobotType rt = getBuildingToBuild();
-				if (rt != null)
+				if (rt != null){
 					return wantToBuild(rt);
+				}
 			}
 			return null;
 		}
@@ -190,7 +202,7 @@ public class Objectives {
 		case BEAVER:
 			return 10;// 5 + getOptimalNumber(RobotType.MINER) * 2;
 		case SOLDIER:
-			return Integer.MAX_VALUE;
+			return 0;//Integer.MAX_VALUE;
 		case BASHER:
 			return Integer.MAX_VALUE;
 		case TANK:
@@ -199,7 +211,7 @@ public class Objectives {
 		case MINER:
 			// System.out.println(10 + Registry.ROBOT_COUNT.getSum() / 5);
 			// return 10 + Registry.ROBOT_COUNT.getSum() / 5;
-			return 100;
+			return 50;
 
 		case MINERFACTORY:
 			return (int) Math.log(Registry.ROBOT_COUNT
@@ -211,7 +223,7 @@ public class Objectives {
 
 		case TANKFACTORY:
 			if (rc.hasBuildRequirements(RobotType.TANKFACTORY)) {// it costs 500
-				return (int) Math.log(Registry.ROBOT_COUNT
+				return 199+(int) Math.log(Registry.ROBOT_COUNT
 						.getCount(RobotType.TANK) + 3);
 			}
 			break;

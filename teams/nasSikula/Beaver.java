@@ -13,7 +13,7 @@ public class Beaver extends Miner {
 
 	public void execute() throws GameActionException {
 		if (getAttackDirection() != Direction.NONE) {
-			runToSafety();//15 tank
+			runToSafety(getAttackDirection());//15 tank
 			//TODO or attack
 			
 //			Name	Cost				HP	Attack	Range

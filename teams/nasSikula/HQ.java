@@ -12,16 +12,16 @@ import battlecode.common.RobotInfo;
 import battlecode.common.RobotType;
 
 public class HQ extends Tower {
-	public static List<BuildBuilding> listOfBuildingsProbabilities = null;
-	public static int sumOfBuildings = 0;
-	public static HQ HQ = null;
+//	public static List<BuildBuilding> listOfBuildingsProbabilities = null;
+//	public static int sumOfBuildings = 0;
+//	public static HQ HQ = null;
 	public HQ(RobotController rc) {
 		super(rc);
 	}
-	public HQ init(){
-		HQ = new HQ(rc);
-		return HQ;
-	}
+//	public HQ init(){
+//		HQ = new HQ(rc);
+//		return HQ;
+//	}
 	
 	
 	private void countRobots() {
@@ -41,22 +41,24 @@ public class HQ extends Tower {
 		if (!defend()) {
 			spawnOrBuild();
 		}
-		evaluateBuildingsToBuild();
+//		evaluateBuildingsToBuild();
 
 		transferSupplies();
 		rc.yield();
 	}
 	
-	public void evaluateBuildingsToBuild(){
-		listOfBuildingsProbabilities = new ArrayList<BuildBuilding>();
-		sumOfBuildings = 0;
-		for (RobotType rt : Objectives.OBJECTIVES.buildables) {
-			int count = Objectives.OBJECTIVES.howManyToBuild(rt);
-			if (count == 0)
-				continue;
-			sumOfBuildings += count;
-			listOfBuildingsProbabilities.add(new BuildBuilding(count, rt));
-		}
-	}
+//	public void evaluateBuildingsToBuild(){
+//		//TODO nejde to predavat takhle - nevim jak to ze se jim to povedlo - lze to predat staticky
+//		HQ.listOfBuildingsProbabilities = new ArrayList<BuildBuilding>();
+//		HQ.sumOfBuildings = 0;
+//		for (RobotType rt : Objectives.OBJECTIVES.buildables) {
+//			int count = Objectives.OBJECTIVES.howManyToBuild(rt);
+//			if (count == 0)
+//				continue;
+//			HQ.sumOfBuildings += count;
+//			HQ.listOfBuildingsProbabilities.add(new BuildBuilding(count, rt));
+//		}
+//		System.out.println("print" + HQ.sumOfBuildings);
+//	}
 	
 }

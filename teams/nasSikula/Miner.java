@@ -15,13 +15,15 @@ public class Miner extends MovingBot {
 	
 	@Override
 	public void execute() throws GameActionException {
-		//getEnemiesInAttackingRange() -THEIR
-		//TODO tohle je moc hruby, chce se to vyhybat s predstihem - ted to vypada tak ze umira pod vezi
-		if (getAttackDirection() != Direction.NONE) {
-			runToSafety();
+		Direction enemiesDirection = getAttackDirection();
+		//TODO remember running from danger
+		if (enemiesDirection != Direction.NONE) {
+			runToSafetyOrAttack(enemiesDirection);
+			
 		} else {
 			mineOrMoveTowardsOre();
 		}
+		
 		transferSupplies();
 		rc.yield();
 	}
@@ -63,13 +65,22 @@ public class Miner extends MovingBot {
 		//return false;
 	}
 
-
-	protected void runToSafety() throws GameActionException {
-		Direction attackDirection = getAttackDirection();
+	protected void runToSafety(Direction attackDirection) throws GameActionException {
 		if (rc.isCoreReady()) {
 			Direction dir = getMoveDir(attackDirection.opposite());
 			if (dir != null) {
 				rc.move(dir);
+			}
+		}
+	}
+	
+	protected void runToSafetyOrAttack(Direction attackDirection) throws GameActionException {
+		if (rc.isCoreReady()) {
+			Direction dir = getMoveDir(attackDirection.opposite());
+			if (dir != null) {
+				rc.move(dir);
+			} else {
+				attackLeastHealtyEnemyInRange();
 			}
 		}
 	}

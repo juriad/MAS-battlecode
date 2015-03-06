@@ -21,8 +21,16 @@ public class AttackingBot extends MovingBot {
 		
 		switch (rt){
 			case BASHER:
-				//TODO pri attacku musi byt na 2 kroky blizko (na konci tahu) od mista na ktere utoci
-				//soucasna strategie neutoci...
+				//MapLocation loc = getNearestEnemy(rc);
+				//pri attacku musi byt na 2 kroky blizko (na konci tahu) od mista na ktere utoci
+				Direction dir = getAttackDirection();
+				if (dir != Direction.NONE)
+				{
+					dir = rc.getLocation().directionTo(getNearestTower(rc, theirTeam));
+				}
+				rc.move(dir);
+
+
 				break;
 			case LAUNCHER:
 				//if (rc.senseNearbyRobots(rt.attackRadiusSquared, theirTeam));
