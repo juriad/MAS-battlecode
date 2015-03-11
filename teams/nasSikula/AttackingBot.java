@@ -47,7 +47,7 @@ public class AttackingBot extends MovingBot {
 						rc.launchMissile(direction);
 				
 			default:
-				attackLeastHealtyEnemyInRange();
+				attackLeastHealtyValuedEnemyInRange();
 				break;
 		}
 		

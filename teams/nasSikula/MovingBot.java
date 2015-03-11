@@ -125,14 +125,32 @@ public abstract class MovingBot extends BaseBot {
 	 * @return location of our target if there is one...
 	 * @throws GameActionException
 	 */
-	protected MapLocation attackLeastHealtyEnemyInRange()
+	protected MapLocation attackLeastHealtyValuedEnemyInRange()
 			throws GameActionException {
 
 		RobotInfo[] enemies = getEnemiesInAttackingRange();
 
 		if (enemies.length > 0) {
 			// attack!
-			MapLocation target = getLeastHealthEnemy(enemies);
+			if (rc.isWeaponReady()) {
+				MapLocation target = getLeastHealthValuedTarget(enemies);
+				
+				rc.attackLocation(target);		
+				
+				return target;
+			}
+			
+		}
+		return null;
+	}
+	
+	protected MapLocation attackHQOrTowerOrLeastHealtyEnemyInRange()//todo
+			throws GameActionException {
+
+		RobotInfo[] enemies = getEnemiesInAttackingRange();
+		if (enemies.length > 0) {
+			// attack!
+			MapLocation target = getLeastHealthValuedTarget(enemies);
 			
 			if (rc.isWeaponReady()) {
 				rc.attackLocation(target);			

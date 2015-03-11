@@ -98,27 +98,58 @@ public abstract class BaseBot {
 		return enemies;
 	}
 
-	public MapLocation getLeastHealthEnemy(RobotInfo[] enemies)
+	public MapLocation getLeastHealthValuedTarget(RobotInfo[] enemies)
 			throws GameActionException {
 		if (enemies.length == 0) {
 			return null;
 		}
-
 		double minEnergon = Double.MAX_VALUE;
 		MapLocation toAttack = null;
+		double minEnergonTower = Double.MAX_VALUE;
+		MapLocation toAttackTower = null;
 		for (RobotInfo info : enemies) {
-			if (info.health < minEnergon) {
-				toAttack = info.location;
-				minEnergon = info.health;
+			if(info.type == RobotType.HQ){
+				return info.location;
+			} else if (info.type == RobotType.TOWER) {
+				if (info.health < minEnergonTower) {
+					toAttackTower = info.location;
+					minEnergonTower = info.health;
+				}
+			} else {
+				if (info.health < minEnergon) {
+					toAttack = info.location;
+					minEnergon = info.health;
+				}
 			}
 		}
-		return toAttack;
-
+		if (toAttackTower != null)
+			return toAttackTower;
+		else
+			return toAttack;
+			
 	}
+	
+//	public MapLocation getLeastHealthEnemy(RobotInfo[] enemies)
+//			throws GameActionException {
+//		if (enemies.length == 0) {
+//			return null;
+//		}
+//
+//		double minEnergon = Double.MAX_VALUE;
+//		MapLocation toAttack = null;
+//		for (RobotInfo info : enemies) {
+//			if (info.health < minEnergon) {
+//				toAttack = info.location;
+//				minEnergon = info.health;
+//			}
+//		}
+//		return toAttack;
+//
+//	}
 
-	public MapLocation attackLeastHealthEnemy(RobotInfo[] enemies)
+	public MapLocation attackLeastHealthValuedEnemy(RobotInfo[] enemies)
 			throws GameActionException {
-		MapLocation toAttack = getLeastHealthEnemy(enemies);
+		MapLocation toAttack = getLeastHealthValuedTarget(enemies);
 		if (toAttack != null)
 			rc.attackLocation(toAttack);
 		return toAttack;

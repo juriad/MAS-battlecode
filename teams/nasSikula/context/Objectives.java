@@ -87,11 +87,9 @@ public class Objectives {
 		for (BuildBuilding building : listOfBuildingsProbabilities) {
 			index -= building.howMany;
 			if (index <= 0){
-				//pouze pokud mame zaruceno postaveni...
-//				building.howMany--;
-//				HQ.HQ.sumOfBuildings--;
+
 				
-				System.out.println(building.type);
+				//System.out.println(building.type);
 				
 				return building.type;
 			}
@@ -218,7 +216,7 @@ public class Objectives {
 					.getCount(RobotType.MINER) + 3);
 
 		case BARRACKS:
-			return 2 + (int) Math.log(Registry.ROBOT_COUNT
+			return 1 + (int) Math.log(Registry.ROBOT_COUNT
 					.getCount(RobotType.SOLDIER) + 3);
 
 		case TANKFACTORY:
@@ -245,13 +243,13 @@ public class Objectives {
 		case HELIPAD:
 			return 1;
 		case LAUNCHER:
-			return 5;
+			return 8;
 		case MISSILE:
 			break;
 		case TECHNOLOGYINSTITUTE:
-			return 1;
+			return 0;
 		case TRAININGFIELD:
-			return 1;
+			return 0;
 		default:
 			break;
 		}
@@ -267,10 +265,16 @@ public class Objectives {
 		double generatedSupplyPerTurn = 100 * (2 + Math.pow(depots, 0.6));
 		// prumer na jendotku na tah je ~ 9 ale jsou tam ty cooldown tak
 		// pocitam treba 3x
-		if ((generatedSupplyPerTurn / consumption) > 1) {
+		
+		System.out.println("supply");
+		System.out.println((consumption /generatedSupplyPerTurn ) );
+		System.out.println(1 + (int) (Math.log(Registry.ROBOT_COUNT
+				.getCount(RobotType.SOLDIER) + 3) / 4));
+		
+		if ((consumption /generatedSupplyPerTurn ) > 0.8) {
 			return depots + 1;
 		}
-
+		
 		return 1 + (int) (Math.log(Registry.ROBOT_COUNT
 				.getCount(RobotType.SOLDIER) + 3) / 4);
 	}

@@ -80,7 +80,7 @@ public class Miner extends MovingBot {
 			if (dir != null) {
 				rc.move(dir);
 			} else {
-				attackLeastHealtyEnemyInRange();
+				attackLeastHealtyValuedEnemyInRange();
 			}
 		}
 	}
