@@ -167,13 +167,13 @@ public abstract class BaseBot {
 	}
 
 	/**
-	 * @return direction towards core of a nearby attack
+	 * @return location of core of a nearby attack or null
 	 */
-	protected Direction getAttackDirection() {
+	protected MapLocation getAttackDirection() {
 		RobotInfo[] enemies = rc.senseNearbyRobots(
 				RobotType.TANK.attackRadiusSquared, theirTeam);
 		if (enemies.length == 0) {
-			return Direction.NONE;
+			return null;
 		}
 
 		double x = rc.getLocation().x;
@@ -183,7 +183,7 @@ public abstract class BaseBot {
 			x += (ri.location.x - rc.getLocation().x) * ri.type.attackPower;
 			y += (ri.location.y - rc.getLocation().y) * ri.type.attackPower;
 		}
-		return rc.getLocation().directionTo(new MapLocation((int) x, (int) y));
+		return new MapLocation((int) x, (int) y);
 	}
 
 	protected void transferSupplies() throws GameActionException {

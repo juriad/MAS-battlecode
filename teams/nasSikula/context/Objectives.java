@@ -202,7 +202,7 @@ public class Objectives {
 		case BEAVER:
 			return 10;// 5 + getOptimalNumber(RobotType.MINER) * 2;
 		case SOLDIER:
-			return 0;//Integer.MAX_VALUE;
+			return 30;//Integer.MAX_VALUE;
 		case BASHER:
 			return Integer.MAX_VALUE;
 		case TANK:
@@ -223,7 +223,7 @@ public class Objectives {
 
 		case TANKFACTORY:
 			if (rc.hasBuildRequirements(RobotType.TANKFACTORY)) {// it costs 500
-				return 199+(int) Math.log(Registry.ROBOT_COUNT
+				return (int) Math.log(Registry.ROBOT_COUNT
 						.getCount(RobotType.TANK) + 3);
 			}
 			break;
@@ -276,7 +276,7 @@ public class Objectives {
 	}
 
 	private int buildInLastMinute() {
-		int whenToStart = 150;
+		int whenToStart = 200;
 		int round = Clock.getRoundNum();
 		// if no damage
 		if ((round + whenToStart) >= numberOfRounds

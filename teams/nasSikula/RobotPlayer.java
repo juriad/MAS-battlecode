@@ -28,6 +28,9 @@ public class RobotPlayer {
 		case TANKFACTORY:
 		case HELIPAD:
 		case AEROSPACELAB:
+			
+		case TECHNOLOGYINSTITUTE:
+		case TRAININGFIELD:
 			return new Factory(rc);
 			
 		case SUPPLYDEPOT:
@@ -45,10 +48,6 @@ public class RobotPlayer {
 			return new AttackingBot(rc);
 			
 		case COMPUTER:
-			break;
-		case TECHNOLOGYINSTITUTE:
-			break;
-		case TRAININGFIELD:
 			break;
 		default:
 			// won't happen

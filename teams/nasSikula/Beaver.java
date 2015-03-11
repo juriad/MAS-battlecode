@@ -2,6 +2,7 @@ package nasSikula;
 
 import battlecode.common.Direction;
 import battlecode.common.GameActionException;
+import battlecode.common.MapLocation;
 import battlecode.common.RobotController;
 
 public class Beaver extends Miner {
@@ -12,9 +13,9 @@ public class Beaver extends Miner {
 	}
 
 	public void execute() throws GameActionException {
-		if (getAttackDirection() != Direction.NONE) {
-			runToSafety(getAttackDirection());//15 tank
-			//TODO or attack
+		MapLocation attackLocation = getAttackDirection();
+		if (attackLocation != null) {
+			runToSafetyOrAttack(rc.getLocation().directionTo(attackLocation));//15 tank
 			
 //			Name	Cost				HP	Attack	Range
 //			Beaver	100 ore, 20 turns	30	4	5

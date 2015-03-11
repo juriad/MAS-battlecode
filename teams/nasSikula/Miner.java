@@ -15,10 +15,10 @@ public class Miner extends MovingBot {
 	
 	@Override
 	public void execute() throws GameActionException {
-		Direction enemiesDirection = getAttackDirection();
+		MapLocation attackLocation = getAttackDirection();
 		//TODO remember running from danger
-		if (enemiesDirection != Direction.NONE) {
-			runToSafetyOrAttack(enemiesDirection);
+		if (attackLocation != null) {
+			runToSafetyOrAttack(rc.getLocation().directionTo(attackLocation));
 			
 		} else {
 			mineOrMoveTowardsOre();

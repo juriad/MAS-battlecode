@@ -16,20 +16,20 @@ public class AttackingBot extends MovingBot {
 
 	public void execute() throws GameActionException {
 		
-		MapLocation target = null;
 		RobotType rt = rc.getType();
-		Direction dir = null;
+		MapLocation target = null;
 		switch (rt){
 			case BASHER:
 				//MapLocation loc = getNearestEnemy(rc);
 				//pri attacku musi byt na 2 kroky blizko (na konci tahu) od mista na ktere utoci
-				dir = getAttackDirection();
-				if ((dir == null)||(dir == Direction.NONE)||(dir == Direction.OMNI))
+				target = getAttackDirection();
+				if (target == null)
 				{
-					dir = rc.getLocation().directionTo(getNearestTower(rc, theirTeam));
+					target = getNearestTower(rc, theirTeam);
 				}
 				if (rc.isCoreReady())
-					rc.move(dir);
+					//rc.move(dir);
+					moveTowards(target, false);
 				//TODO ulozit si ID toho po kom jdu - a nasleduj ho i dalsi tahy
 
 
@@ -40,10 +40,11 @@ public class AttackingBot extends MovingBot {
 				if (rc.getLocation().distanceSquaredTo(tower) > 3){
 					moveTowards(tower, false);
 				}
-				dir = getAttackDirection();
-				if(rc.canLaunch(dir))
+				target = getAttackDirection();
+				Direction direction = rc.getLocation().directionTo(target);
+				if(rc.canLaunch(direction))
 					if (rc.getMissileCount() > 0)
-						rc.launchMissile(dir);
+						rc.launchMissile(direction);
 				
 			default:
 				attackLeastHealtyEnemyInRange();
