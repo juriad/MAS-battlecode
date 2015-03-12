@@ -26,7 +26,7 @@ public class AttackingBot extends MovingBot {
 	}
 
 	private void lead() throws GameActionException {
-		moveTowards(getRandomTower(rc, theirTeam));
+		moveTowards(getRandomTowerOrHQ(rc, theirTeam));
 	}
 	private void followCaptain(RobotInfo captain) throws GameActionException {
 		moveTowards(captain.location);

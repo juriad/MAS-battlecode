@@ -226,10 +226,14 @@ public abstract class MovingBot extends BaseBot {
 		return minLoc;
 	}
 
-	protected MapLocation getRandomTower(RobotController rc, Team t) {
+	protected MapLocation getRandomTowerOrHQ(RobotController rc, Team t) {
 		MapLocation[] towers = (t == myTeam) ? rc.senseTowerLocations() : rc
 				.senseEnemyTowerLocations();
-		int index = rand.nextInt(towers.length);
+		
+		int index = rand.nextInt(towers.length + 1);
+		if (towers.length == index){
+			return (t == myTeam) ? rc.senseHQLocation(): rc.senseEnemyHQLocation();
+		}
 		return towers[index];
 	}
 
