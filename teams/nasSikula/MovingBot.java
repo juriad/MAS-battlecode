@@ -1,5 +1,7 @@
 package nasSikula;
 
+import java.util.Random;
+
 import nasSikula.context.Registry;
 import battlecode.common.Direction;
 import battlecode.common.GameActionException;
@@ -233,6 +235,12 @@ public abstract class MovingBot extends BaseBot {
 			}
 		}
 		return minLoc;
+	}
+	
+	protected MapLocation getRandomTower(RobotController rc, Team t) {
+		MapLocation[] towers = (t == myTeam) ? rc.senseTowerLocations():rc.senseEnemyTowerLocations();
+		int index = new Random().nextInt(towers.length);
+		return towers[index];
 	}
 	
 	protected MapLocation getNearestEnemy(RobotController rc) {

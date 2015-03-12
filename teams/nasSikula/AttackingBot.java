@@ -36,15 +36,20 @@ public class AttackingBot extends MovingBot {
 				break;
 			case LAUNCHER:
 				//if (rc.senseNearbyRobots(rt.attackRadiusSquared, theirTeam));
-				MapLocation tower = getNearestTower(rc, myTeam);
+				MapLocation tower = getRandomTower(rc, myTeam);
 				if (rc.getLocation().distanceSquaredTo(tower) > 3){
 					moveTowards(tower, false);
 				}
 				target = getAttackDirection();
-				Direction direction = rc.getLocation().directionTo(target);
-				if(rc.canLaunch(direction))
-					if (rc.getMissileCount() > 0)
-						rc.launchMissile(direction);
+				if (target != null){ 
+					Direction direction = rc.getLocation().directionTo(target);
+					if(rc.canLaunch(direction))
+						if (rc.getMissileCount() > 0)
+							rc.launchMissile(direction);
+				}
+			case MISSILE:
+				break;
+				//rc.explode();
 				
 			default:
 				attackLeastHealtyValuedEnemyInRange();
@@ -56,7 +61,11 @@ public class AttackingBot extends MovingBot {
 		if (target == null) {
 			Direction initialMoveDirection = getInitialMoveDirection();
 			if (initialMoveDirection != Direction.NONE && rc.isCoreReady()) {
-				rc.move(initialMoveDirection);
+				moveTowards(
+						rc.getLocation().add(initialMoveDirection),
+						//theirHQ,
+						false);
+				
 			} else {
 				markDeadEnd();
 			}

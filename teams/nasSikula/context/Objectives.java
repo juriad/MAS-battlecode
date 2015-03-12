@@ -50,8 +50,8 @@ public class Objectives {
 		int optimalNumber = getOptimalNumber(robot);
 		int currentNumber = Registry.ROBOT_COUNT.getCount(robot);
 		if (optimalNumber > currentNumber) {
-			System.out.println("want to build " + robot + " we have "
-					+ currentNumber + "/" + optimalNumber);
+//			System.out.println("want to build " + robot + " we have "
+//					+ currentNumber + "/" + optimalNumber);
 			return robot;
 		}
 		return null;
@@ -68,6 +68,25 @@ public class Objectives {
 		return 0;
 	}
 
+	public RobotType getBuildingToBuild() {
+		//this is simple (uniform) distribution
+		int index = Rand.nextInt(buildablesCount);
+		RobotType robot = buildables[index];
+		int currentNumber = Registry.ROBOT_COUNT.getCount(robot);
+		int optimalNumber = getOptimalNumber(robot);
+		if (optimalNumber <= currentNumber)
+			return null;
+		if (currentNumber == 0){
+			return robot;//build
+		} else {
+			if ((rc.getTeamOre() > 1200) ||
+					(Rand.nextFloat() < 0.1)){
+				return robot;
+			}
+			else return null;
+		}
+	}
+	
 	public RobotType getBuildingToBuild2() {
 		//this is simple (uniform) distribution
 		int index = Rand.nextInt(buildablesCount);
@@ -75,7 +94,7 @@ public class Objectives {
 		return rt;
 	}
 				
-	public RobotType getBuildingToBuild(){
+	public RobotType getBuildingToBuild_(){
 		evaluateBuildingsToBuild();//TODO put to HQ
 		
 		int sum = sumOfBuildings;
@@ -111,6 +130,7 @@ public class Objectives {
 			sumOfBuildings += count;
 			listOfBuildingsProbabilities.add(new BuildBuilding(count, rt));
 		}
+		
 	}
 	public RobotType spawnOrBuild(RobotType type) {
 		// ze zacatku vyrob factory a beavery
@@ -131,13 +151,14 @@ public class Objectives {
 			return null;
 		}
 		if (!type.isBuilding) { // prorezat moznosti
-			if (type == RobotType.BEAVER) {// only moving thing that builds
+			if (type != RobotType.BEAVER) {// only moving thing that builds
+				return null;
+			} else {
 				RobotType rt = getBuildingToBuild();
 				if (rt != null){
 					return wantToBuild(rt);
 				}
 			}
-			return null;
 		}
 
 		switch (type) {
@@ -192,24 +213,34 @@ public class Objectives {
 	}
 
 	public int getOptimalNumber(RobotType type) {// kolik by jich ted melo byt
+		if (Clock.getRoundNum() < 250) {
+			switch (type) {
+				case BEAVER:  
+				case MINER: return 15;
+				case MINERFACTORY: return 2;
+				case BARRACKS: return 1;
+				default:
+					return 0;
+			}
+		}
 		switch (type) {
 		case HQ:
 		case TOWER:
 			return Integer.MIN_VALUE;
 
 		case BEAVER:
-			return 10;// 5 + getOptimalNumber(RobotType.MINER) * 2;
+			return getOptimalNumber(RobotType.MINER)/2;
 		case SOLDIER:
-			return 30;//Integer.MAX_VALUE;
+			return getOptimalNumber(RobotType.BEAVER)*2;//Integer.MAX_VALUE;
 		case BASHER:
-			return Integer.MAX_VALUE;
+			return getOptimalNumber(RobotType.MINER);
 		case TANK:
-			return Integer.MAX_VALUE;
+			return getOptimalNumber(RobotType.MINER);
 
 		case MINER:
 			// System.out.println(10 + Registry.ROBOT_COUNT.getSum() / 5);
-			// return 10 + Registry.ROBOT_COUNT.getSum() / 5;
-			return 50;
+			return 10 + Registry.ROBOT_COUNT.getSum() / 5;
+			//return 50;
 
 		case MINERFACTORY:
 			return (int) Math.log(Registry.ROBOT_COUNT
@@ -274,9 +305,10 @@ public class Objectives {
 		if ((consumption /generatedSupplyPerTurn ) > 0.8) {
 			return depots + 1;
 		}
+		return 0;
 		
-		return 1 + (int) (Math.log(Registry.ROBOT_COUNT
-				.getCount(RobotType.SOLDIER) + 3) / 4);
+//		return 1 + (int) (Math.log(Registry.ROBOT_COUNT
+//				.getCount(RobotType.SOLDIER) + 3) / 4);
 	}
 
 	private int buildInLastMinute() {
@@ -287,7 +319,7 @@ public class Objectives {
 				&& round <= (numberOfRounds - 100)) {
 			// System.out.println("\n\n\n\n\nround: " + round + " whenToStart: "
 			// + whenToStart + " numberOfRounds: "+ numberOfRounds);
-			return 5;
+			return 8;
 		}
 		return 0;
 	}
