@@ -65,7 +65,7 @@ public class Miner extends MovingBot {
 			target = new MapLocation(2 * loc.x - attackLocation.x, 2 * loc.y
 					- attackLocation.y);
 			if (!moveTowards(target)) {
-				attackLeastHealtyEnemyInRange();
+				attackLeastHealtyValuedEnemyInRange();
 			}
 		}
 	}

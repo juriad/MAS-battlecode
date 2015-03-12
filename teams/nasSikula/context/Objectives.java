@@ -215,7 +215,7 @@ public class Objectives {
 						.getCount(RobotType.MINER) + 3);
 
 			case BARRACKS :
-				return 2 + (int) Math.log(Registry.ROBOT_COUNT
+				return 1 + (int) Math.log(Registry.ROBOT_COUNT
 						.getCount(RobotType.SOLDIER) + 3);
 
 			case TANKFACTORY :
@@ -233,23 +233,23 @@ public class Objectives {
 				return buildInLastMinute();
 
 			case AEROSPACELAB :
-				return 1;
+				return 0;
 			case COMMANDER :
-				return 1;
+				return 0;
 			case COMPUTER :
 				break;
 			case DRONE :
-				return 1;
+				return 0;
 			case HELIPAD :
-				return 1;
+				return 0;
 			case LAUNCHER :
-				return 5;
+				return 0;
 			case MISSILE :
 				break;
 			case TECHNOLOGYINSTITUTE :
-				return 1;
+				return 0;
 			case TRAININGFIELD :
-				return 1;
+				return 0;
 			default :
 				break;
 		}
@@ -257,17 +257,23 @@ public class Objectives {
 	}
 
 	private int getSupplyDepodNbr() {
-		// int depots = Registry.ROBOT_COUNT.getCount(RobotType.SUPPLYDEPOT);
-		// int robots = Registry.ROBOT_COUNT.getTotalCount();
-		// int consumption = robots * 3; // spotreba cca - nevim jak je to s
-		// // tim Cooldown
-		// // HQ per turn is 100*(2+supply_depots^0.6)
-		// double generatedSupplyPerTurn = 100 * (2 + Math.pow(depots, 0.6));
-		// // prumer na jendotku na tah je ~ 9 ale jsou tam ty cooldown tak
-		// // pocitam treba 3x
-		// if ((generatedSupplyPerTurn / consumption) > 1) {
-		// return depots + 1;
-		// }
+		int depots = Registry.ROBOT_COUNT.getCount(RobotType.SUPPLYDEPOT);
+		int robots = Registry.ROBOT_COUNT.getTotalCount();
+		int consumption = robots * 3; // spotreba cca - nevim jak je to s
+										// tim Cooldown
+		// HQ per turn is 100*(2+supply_depots^0.6)
+		double generatedSupplyPerTurn = 100 * (2 + Math.pow(depots, 0.6));
+		// prumer na jendotku na tah je ~ 9 ale jsou tam ty cooldown tak
+		// pocitam treba 3x
+
+		System.out.println("supply");
+		System.out.println((consumption / generatedSupplyPerTurn));
+		System.out.println(1 + (int) (Math.log(Registry.ROBOT_COUNT
+				.getCount(RobotType.SOLDIER) + 3) / 4));
+
+		if ((consumption / generatedSupplyPerTurn) > 0.8) {
+			return depots + 1;
+		}
 
 		return 1 + (int) (Math.log(Registry.ROBOT_COUNT
 				.getCount(RobotType.SOLDIER) + 3) / 4);

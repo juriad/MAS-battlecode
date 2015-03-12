@@ -34,7 +34,7 @@ public class AttackingBot extends MovingBot {
 	}
 
 	protected void attack() throws GameActionException {
-		attackLeastHealtyEnemyInRange();
+		attackLeastHealtyValuedEnemyInRange();
 	}
 
 	@Override

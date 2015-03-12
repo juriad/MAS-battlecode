@@ -1,7 +1,14 @@
 package blbec;
 
-import battlecode.common.*;
-import java.util.*;
+import java.util.Random;
+
+import battlecode.common.Direction;
+import battlecode.common.GameActionException;
+import battlecode.common.MapLocation;
+import battlecode.common.RobotController;
+import battlecode.common.RobotInfo;
+import battlecode.common.RobotType;
+import battlecode.common.Team;
 
 public class RobotPlayer {
 	static RobotController rc;
