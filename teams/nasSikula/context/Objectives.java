@@ -9,7 +9,7 @@ import battlecode.common.RobotType;
 
 public class Objectives {
 	public static Objectives OBJECTIVES = null;
-	public static Random Rand = null;
+	public static Random rand = null;
 
 	private static final int buildablesCount = 9;
 	public static final RobotType[] buildables = new RobotType[buildablesCount];
@@ -17,7 +17,7 @@ public class Objectives {
 
 	public static void init(RobotController rc) throws Exception {
 		OBJECTIVES = new Objectives(rc);
-		Rand = new Random();
+		rand = new Random();
 		numberOfRounds = rc.getRoundLimit();
 
 		int i = 0;
@@ -47,8 +47,8 @@ public class Objectives {
 		int optimalNumber = getOptimalNumber(robot);
 		int currentNumber = Registry.ROBOT_COUNT.getCount(robot);
 		if (optimalNumber > currentNumber) {
-			System.out.println("want to build " + robot + " we have "
-					+ currentNumber + "/" + optimalNumber);
+			// System.out.println("want to build " + robot + " we have "
+			// + currentNumber + "/" + optimalNumber);
 			return robot;
 		}
 		return null;
@@ -63,14 +63,32 @@ public class Objectives {
 		return 0;
 	}
 
+	public RobotType getBuildingToBuild() {
+		// this is simple (uniform) distribution
+		int index = rand.nextInt(buildablesCount);
+		RobotType robot = buildables[index];
+		int currentNumber = Registry.ROBOT_COUNT.getCount(robot);
+		int optimalNumber = getOptimalNumber(robot);
+		if (optimalNumber <= currentNumber)
+			return null;
+		if (currentNumber == 0) {
+			return robot;// build
+		} else {
+			if ((rc.getTeamOre() > 1200) || (rand.nextFloat() < 0.1)) {
+				return robot;
+			} else
+				return null;
+		}
+	}
+
 	public RobotType getBuildingToBuild2() {
 		// this is simple (uniform) distribution
-		int index = Rand.nextInt(buildablesCount);
+		int index = rand.nextInt(buildablesCount);
 		RobotType rt = buildables[index];
 		return rt;
 	}
 
-	public RobotType getBuildingToBuild() {
+	public RobotType getBuildingToBuild_() {
 		evaluateBuildingsToBuild();// TODO put to HQ
 
 		int sum = sumOfBuildings;
@@ -78,7 +96,7 @@ public class Objectives {
 			return null;
 		}
 
-		int index = Rand.nextInt(sum);
+		int index = rand.nextInt(sum);
 		for (BuildBuilding building : listOfBuildingsProbabilities) {
 			index -= building.howMany;
 			if (index <= 0) {
@@ -110,6 +128,7 @@ public class Objectives {
 			sumOfBuildings += count;
 			listOfBuildingsProbabilities.add(new BuildBuilding(count, rt));
 		}
+
 	}
 
 	public RobotType spawnOrBuild(RobotType type) {
@@ -131,13 +150,14 @@ public class Objectives {
 			return null;
 		}
 		if (!type.isBuilding) { // prorezat moznosti
-			if (type == RobotType.BEAVER) {// only moving thing that builds
+			if (type != RobotType.BEAVER) {// only moving thing that builds
+				return null;
+			} else {
 				RobotType rt = getBuildingToBuild();
 				if (rt != null) {
 					return wantToBuild(rt);
 				}
 			}
-			return null;
 		}
 
 		switch (type) {
@@ -192,6 +212,19 @@ public class Objectives {
 	}
 
 	public int getOptimalNumber(RobotType type) {// kolik by jich ted melo byt
+		if (Clock.getRoundNum() < 250) {
+			switch (type) {
+				case BEAVER :
+				case MINER :
+					return 15;
+				case MINERFACTORY :
+					return 2;
+				case BARRACKS :
+					return 1;
+				default :
+					return 0;
+			}
+		}
 		switch (type) {
 			case HQ :
 			case TOWER :
@@ -274,9 +307,10 @@ public class Objectives {
 		if ((consumption / generatedSupplyPerTurn) > 0.8) {
 			return depots + 1;
 		}
+		return 0;
 
-		return 1 + (int) (Math.log(Registry.ROBOT_COUNT
-				.getCount(RobotType.SOLDIER) + 3) / 4);
+		// return 1 + (int) (Math.log(Registry.ROBOT_COUNT
+		// .getCount(RobotType.SOLDIER) + 3) / 4);
 	}
 
 	private int buildInLastMinute() {
@@ -287,7 +321,7 @@ public class Objectives {
 				&& round <= (numberOfRounds - 100)) {
 			// System.out.println("\n\n\n\n\nround: " + round + " whenToStart: "
 			// + whenToStart + " numberOfRounds: "+ numberOfRounds);
-			return 5;
+			return 8;
 		}
 		return 0;
 	}

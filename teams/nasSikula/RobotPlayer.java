@@ -39,13 +39,13 @@ public class RobotPlayer {
 
 			case SUPPLYDEPOT :
 			case HANDWASHSTATION :
+			case MISSILE :
 				return new NoOpBot(rc);
 
 			case LAUNCHER :
 				return new Launcher(rc);
 
 			case DRONE :
-			case MISSILE :
 			case COMMANDER :
 				return new AttackingBot(rc);
 
