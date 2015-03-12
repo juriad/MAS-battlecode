@@ -91,7 +91,11 @@ public class RobotPlayer {
 			} catch (Exception e) {
 				e.printStackTrace();
 			} finally {
-				transferSupplies(rc);
+				try {
+					transferSupplies(rc);
+				} catch (Exception e) {
+					// do nothing
+				}
 				rc.yield();
 			}
 		}
