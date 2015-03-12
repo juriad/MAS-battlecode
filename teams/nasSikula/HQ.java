@@ -33,6 +33,9 @@ public class HQ extends Tower {
 
 	public void execute() throws GameActionException {
 		countRobots();
+		// System.out.println("Was " + Registry.CAPTAIN_COUNTER.get()
+		// + " captains.");
+		Registry.CAPTAIN_COUNTER.reset();
 		if (!defend()) {
 			spawnOrBuild();
 		}
