@@ -16,7 +16,7 @@ public class Basher extends AttackingBot {
 		// ktere utoci
 		target = getAttackDirection();
 		if (target == null) {
-			target = getNearestTower(rc, theirTeam);
+			target = getNearestTowerOrHQ(rc, theirTeam);
 		}
 		if (rc.isCoreReady())
 			// rc.move(dir);
