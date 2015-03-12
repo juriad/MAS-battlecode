@@ -25,15 +25,19 @@ public abstract class Captain extends RegistryClass {
 
 	public int getGroup() {
 		if (group == -1) {
-			group = (int) (rc.getID() % Math.sqrt(getCount()) / 3);
+			group = (int) (rc.getID() % Math.sqrt(getCount()));
 		}
 		return group;
 	}
 
 	public RobotInfo getCaptain() {
+		// System.out.println("Am in group " + getGroup());
 		int capId = read(getGroup() * 2);
 		try {
-			return rc.senseRobot(capId);
+			RobotInfo senseRobot = rc.senseRobot(capId);
+			// System.out.println("Captain of " + rc.getID() + " is "
+			// + senseRobot.ID);
+			return senseRobot;
 		} catch (Exception e) {
 			RobotInfo me = null;
 			try {

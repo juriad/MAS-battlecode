@@ -86,8 +86,8 @@ public abstract class MovingBot extends BaseBot {
 						&& freeDirs[(i + 6) % 8]) {
 					if (!Registry.MAP.isAttackerDeadEnd(loc)) {
 						Registry.MAP.setAttackerDeadEnd(loc);
-						Registry.COUNTER.increase();
-						System.out.println(Registry.COUNTER.get()
+						Registry.DEAD_END_COUNTER.increase();
+						System.out.println(Registry.DEAD_END_COUNTER.get()
 								+ ": Marking " + loc + "as dead end");
 					}
 					break;

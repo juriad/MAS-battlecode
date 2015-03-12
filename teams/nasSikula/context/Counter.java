@@ -22,4 +22,8 @@ public class Counter extends RegistryClass {
 		return read(0);
 	}
 
+	public void reset() {
+		write(0, 0);
+	}
+
 }
