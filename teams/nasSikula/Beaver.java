@@ -12,6 +12,6 @@ public class Beaver extends Miner {
 	}
 
 	public void execute() throws GameActionException {
-		logic();
+		logic(true);
 	}
 }

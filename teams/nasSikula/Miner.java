@@ -13,14 +13,14 @@ public class Miner extends MovingBot {
 
 	private static double ORE_EPSILON = 0.8;
 
-	protected void logic() throws GameActionException{
+	protected void logic(boolean isBasher) throws GameActionException{
 		MapLocation attackLocation = getAttackDirection();
 		// TODO remember running from danger
 		if (attackLocation != null) {
 			runToSafetyOrAttack(attackLocation);
 
 		} else {
-			if (!isMiner())
+			if (isBasher)
 				spawnOrBuild();
 			mineOrMoveTowardsOre();
 		}
@@ -29,7 +29,7 @@ public class Miner extends MovingBot {
 	}
 	@Override
 	public void execute() throws GameActionException {
-		logic();
+		logic(false);
 	}
 
 	protected MapLocation towardsOre() throws GameActionException {
