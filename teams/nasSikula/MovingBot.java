@@ -6,6 +6,7 @@ import battlecode.common.GameActionException;
 import battlecode.common.MapLocation;
 import battlecode.common.RobotController;
 import battlecode.common.RobotInfo;
+import battlecode.common.RobotType;
 import battlecode.common.Team;
 import battlecode.common.TerrainTile;
 
@@ -170,6 +171,7 @@ public abstract class MovingBot extends BaseBot {
 		Direction[] freeDirections = getFreeDirections(isMiner());
 		Direction directionTo = rc.getLocation().directionTo(ml);
 		int d = directionTo.ordinal();
+		MapLocation loc = rc.getLocation();
 
 		Direction opt = null;
 		int delta = 100;
@@ -177,6 +179,18 @@ public abstract class MovingBot extends BaseBot {
 			if (rc.canMove(dir)
 					&& dir.opposite() != Registry.MAP.getDirection(ml,
 							isMiner())) { // do not go back
+				if (isMiner()) {
+					boolean another = false;
+					for (MapLocation t : rc.senseEnemyTowerLocations()) {
+						if (t.distanceSquaredTo(loc.add(dir)) <= RobotType.TOWER.attackRadiusSquared) {
+							another = true;
+							break;
+						}
+					}
+					if (another) {
+						continue;
+					}
+				}
 				int del = Math.min(
 						Math.min(Math.abs(dir.ordinal() - d),
 								Math.abs(dir.ordinal() - d - 8)),
@@ -225,27 +239,28 @@ public abstract class MovingBot extends BaseBot {
 		}
 		return minLoc;
 	}
-	
+
 	protected MapLocation getNearestTowerOrHQ(RobotController rc, Team t) {
 		MapLocation myLoc = rc.getLocation();
 		MapLocation Tower = getNearestTower(rc, t);
-		MapLocation HQ = (t == myTeam) ? rc.senseHQLocation(): rc.
-				senseEnemyHQLocation();
+		MapLocation HQ = (t == myTeam) ? rc.senseHQLocation() : rc
+				.senseEnemyHQLocation();
 		if (Tower == null)
 			return HQ;
-					
+
 		int distToHQ = myLoc.distanceSquaredTo(HQ);
 		int distToTower = myLoc.distanceSquaredTo(Tower);
-		return distToHQ < distToTower ? HQ :Tower;
+		return distToHQ < distToTower ? HQ : Tower;
 	}
 
 	protected MapLocation getRandomTowerOrHQ(RobotController rc, Team t) {
 		MapLocation[] towers = (t == myTeam) ? rc.senseTowerLocations() : rc
 				.senseEnemyTowerLocations();
-		
+
 		int index = rand.nextInt(towers.length + 1);
-		if (towers.length == index){
-			return (t == myTeam) ? rc.senseHQLocation(): rc.senseEnemyHQLocation();
+		if (towers.length == index) {
+			return (t == myTeam) ? rc.senseHQLocation() : rc
+					.senseEnemyHQLocation();
 		}
 		return towers[index];
 	}

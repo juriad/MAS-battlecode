@@ -13,23 +13,23 @@ public class Map extends RegistryClass {
 		super(rc, offset);
 
 		MapLocation hq = rc.senseHQLocation();
-		tlx = hq.x - 122;
-		tly = hq.y - 122;
+		tlx = hq.x - 125;
+		tly = hq.y - 125;
 	}
 
 	@Override
 	public int getSize() {
 		// a little bigger to be sure
 		// I am lazy to count the ones
-		return 244 * 244;
+		return 250 * 250;
 	}
 
 	private int get(MapLocation ml) {
-		return read((ml.y - tly) * 244 + ml.x - tlx);
+		return read((ml.y - tly) * 250 + ml.x - tlx);
 	}
 
 	private void set(MapLocation ml, int val) {
-		write((ml.y - tly) * 244 + ml.x - tlx, val);
+		write((ml.y - tly) * 250 + ml.x - tlx, val);
 	}
 
 	public void setAttackUnitDirection(MapLocation ml, Direction d) {
