@@ -12,8 +12,6 @@ public class Factory extends BaseBot {
 	@Override
 	public void execute() throws GameActionException {
 		spawnOrBuild();
-		transferSupplies();
-		rc.yield();
 	}
 
 }

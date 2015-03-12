@@ -9,9 +9,9 @@ public class RobotPlayer {
 	static Team enemyTeam;
 	static int myRange;
 	static Random rand;
-	static Direction[] directions = { Direction.NORTH, Direction.NORTH_EAST,
+	static Direction[] directions = {Direction.NORTH, Direction.NORTH_EAST,
 			Direction.EAST, Direction.SOUTH_EAST, Direction.SOUTH,
-			Direction.SOUTH_WEST, Direction.WEST, Direction.NORTH_WEST };
+			Direction.SOUTH_WEST, Direction.WEST, Direction.NORTH_WEST};
 
 	public static void run(RobotController tomatojuice) {
 		rc = tomatojuice;
@@ -193,7 +193,7 @@ public class RobotPlayer {
 	// possible)
 	static void tryMove(Direction d) throws GameActionException {
 		int offsetIndex = 0;
-		int[] offsets = { 0, 1, -1, 2, -2 };
+		int[] offsets = {0, 1, -1, 2, -2};
 		int dirint = directionToInt(d);
 		boolean blocked = false;
 		while (offsetIndex < 5
@@ -210,7 +210,7 @@ public class RobotPlayer {
 	static void trySpawn(Direction d, RobotType type)
 			throws GameActionException {
 		int offsetIndex = 0;
-		int[] offsets = { 0, 1, -1, 2, -2, 3, -3, 4 };
+		int[] offsets = {0, 1, -1, 2, -2, 3, -3, 4};
 		int dirint = directionToInt(d);
 		boolean blocked = false;
 		while (offsetIndex < 8
@@ -229,7 +229,7 @@ public class RobotPlayer {
 	static void tryBuild(Direction d, RobotType type)
 			throws GameActionException {
 		int offsetIndex = 0;
-		int[] offsets = { 0, 1, -1, 2, -2, 3, -3, 4 };
+		int[] offsets = {0, 1, -1, 2, -2, 3, -3, 4};
 		int dirint = directionToInt(d);
 		boolean blocked = false;
 		while (offsetIndex < 8
@@ -243,24 +243,24 @@ public class RobotPlayer {
 
 	static int directionToInt(Direction d) {
 		switch (d) {
-		case NORTH:
-			return 0;
-		case NORTH_EAST:
-			return 1;
-		case EAST:
-			return 2;
-		case SOUTH_EAST:
-			return 3;
-		case SOUTH:
-			return 4;
-		case SOUTH_WEST:
-			return 5;
-		case WEST:
-			return 6;
-		case NORTH_WEST:
-			return 7;
-		default:
-			return -1;
+			case NORTH :
+				return 0;
+			case NORTH_EAST :
+				return 1;
+			case EAST :
+				return 2;
+			case SOUTH_EAST :
+				return 3;
+			case SOUTH :
+				return 4;
+			case SOUTH_WEST :
+				return 5;
+			case WEST :
+				return 6;
+			case NORTH_WEST :
+				return 7;
+			default :
+				return -1;
 		}
 	}
 }

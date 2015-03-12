@@ -87,4 +87,36 @@ public class Map extends RegistryClass {
 		int i = get(ml);
 		return (i & 0b000_00010) == 1;
 	}
+
+	public void setDirection(MapLocation ml, boolean miner, Direction d) {
+		if (miner) {
+			setMinerUnitDirection(ml, d);
+		} else {
+			setAttackUnitDirection(ml, d);
+		}
+	}
+
+	public Direction getDirection(MapLocation ml, boolean miner) {
+		if (miner) {
+			return getMinerUnitDirection(ml);
+		} else {
+			return getAttackUnitDirection(ml);
+		}
+	}
+
+	public void setDeadEnd(MapLocation ml, boolean miner) {
+		if (miner) {
+			setMiningDeadEnd(ml);
+		} else {
+			setAttackerDeadEnd(ml);
+		}
+	}
+
+	public boolean isDeadEnd(MapLocation ml, boolean miner) {
+		if (miner) {
+			return isMiningDeadEnd(ml);
+		} else {
+			return isAttackerDeadEnd(ml);
+		}
+	}
 }

@@ -9,7 +9,5 @@ public class NoOpBot extends BaseBot {
 	}
 
 	public void execute() throws GameActionException {
-		// System.out.println(rc.getID() + ": alive " );
-		rc.yield();
 	}
 }

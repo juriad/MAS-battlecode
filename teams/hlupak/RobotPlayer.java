@@ -45,9 +45,9 @@ public class RobotPlayer {
 
 		public Direction[] getDirectionsToward(MapLocation dest) {
 			Direction toDest = rc.getLocation().directionTo(dest);
-			Direction[] dirs = { toDest, toDest.rotateLeft(),
+			Direction[] dirs = {toDest, toDest.rotateLeft(),
 					toDest.rotateRight(), toDest.rotateLeft().rotateLeft(),
-					toDest.rotateRight().rotateRight() };
+					toDest.rotateRight().rotateRight()};
 
 			return dirs;
 		}

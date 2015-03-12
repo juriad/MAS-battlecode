@@ -46,10 +46,6 @@ public class RobotCount extends RegistryClass {
 		return RobotType.values().length + 1;
 	}
 
-	public int getSum() {
-		return read(RobotType.values().length);
-	}
-	
 	public int getTotalCount() {
 		return read(RobotType.values().length);
 	}

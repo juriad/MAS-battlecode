@@ -7,6 +7,7 @@ public class Registry {
 	public static RobotCount ROBOT_COUNT = null;
 	public static Map MAP = null;
 	public static Captain CAPTAIN = null;
+	public static Counter COUNTER = null;
 
 	public static void init(RobotController rc) {
 		ROBOT_COUNT = new RobotCount(rc, 0);
@@ -17,5 +18,6 @@ public class Registry {
 				return Registry.ROBOT_COUNT.getCount(RobotType.SOLDIER);
 			}
 		};
+		COUNTER = new Counter(rc, CAPTAIN.getSize() + CAPTAIN.getOffset());
 	}
 }

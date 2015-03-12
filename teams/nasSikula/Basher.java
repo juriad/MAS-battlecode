@@ -1,5 +1,6 @@
 package nasSikula;
 
+import battlecode.common.GameActionException;
 import battlecode.common.RobotController;
 
 public class Basher extends AttackingBot {
@@ -8,10 +9,18 @@ public class Basher extends AttackingBot {
 		super(rc);
 	}
 
-	private static double ORE_EPSILON = 4;
-	
 	@Override
-	protected double get_ore_epsilon(){
-		return ORE_EPSILON;
+	protected void attack() throws GameActionException {
+		// MapLocation loc = getNearestEnemy(rc);
+		// pri attacku musi byt na 2 kroky blizko (na konci tahu) od mista na
+		// ktere utoci
+		target = getAttackDirection();
+		if (target == null) {
+			target = getNearestTower(rc, theirTeam);
+		}
+		if (rc.isCoreReady())
+			// rc.move(dir);
+			moveTowards(target);
+		// TODO ulozit si ID toho po kom jdu - a nasleduj ho i dalsi tahy
 	}
 }

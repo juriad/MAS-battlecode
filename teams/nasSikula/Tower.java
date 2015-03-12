@@ -11,8 +11,6 @@ public class Tower extends BaseBot {
 
 	public void execute() throws GameActionException {
 		defend();
-		transferSupplies();
-		rc.yield();
 	}
 
 	/**

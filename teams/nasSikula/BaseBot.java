@@ -6,7 +6,6 @@ import nasSikula.context.Objectives;
 import nasSikula.context.Registry;
 import battlecode.common.Direction;
 import battlecode.common.GameActionException;
-import battlecode.common.GameConstants;
 import battlecode.common.MapLocation;
 import battlecode.common.RobotController;
 import battlecode.common.RobotInfo;
@@ -31,28 +30,17 @@ public abstract class BaseBot {
 	}
 
 	public Direction[] getDirectionsToward(Direction toDest) {
-		Direction[] dirs = { toDest, toDest.rotateLeft(), toDest.rotateRight(),
+		Direction[] dirs = {toDest, toDest.rotateLeft(), toDest.rotateRight(),
 				toDest.rotateLeft().rotateLeft(),
-				toDest.rotateRight().rotateRight() };
+				toDest.rotateRight().rotateRight()};
 
 		return dirs;
 	}
 
-	public Direction getMoveDir(Direction dir) {
-		Direction[] dirs = getDirectionsToward(dir);
-		for (Direction d : dirs) {
-			if (rc.canMove(d)) {
-				return d;
-			}
-		}
-		return null;
-	}
-
-	public Direction getMoveDir(MapLocation dest) {
-		return getMoveDir(rc.getLocation().directionTo(dest));
-	}
-
-	public Direction getSpawnDirection(RobotType type) {//TODO na kazdou stranu muzou vylezt - tohle asi ze zacatku zdrzuje
+	public Direction getSpawnDirection(RobotType type) {// TODO na kazdou stranu
+														// muzou vylezt - tohle
+														// asi ze zacatku
+														// zdrzuje
 		Direction dir = rc.getLocation().directionTo(theirHQ);
 		Direction[] dirs = getDirectionsToward(dir);
 		for (Direction d : dirs) {
@@ -91,10 +79,9 @@ public abstract class BaseBot {
 				theirTeam);
 		return enemies;
 	}
-	
+
 	public RobotInfo[] getEnemiesInTheirPossibleAttackingRange() {
-		RobotInfo[] enemies = rc.senseNearbyRobots(15,
-				theirTeam);
+		RobotInfo[] enemies = rc.senseNearbyRobots(15, theirTeam);
 		return enemies;
 	}
 
@@ -137,7 +124,7 @@ public abstract class BaseBot {
 					Direction direction = getSpawnDirection(spawnOrBuild);
 					if (direction != null) {
 						rc.spawn(direction, spawnOrBuild);
-						
+
 						Registry.ROBOT_COUNT.increase(spawnOrBuild, 1);
 						return true;
 					}
@@ -145,7 +132,7 @@ public abstract class BaseBot {
 					Direction direction = getBuildDirection(spawnOrBuild);
 					if (direction != null) {
 						rc.build(direction, spawnOrBuild);
-						
+
 						Registry.ROBOT_COUNT.increase(spawnOrBuild, 1);
 						return true;
 					}
@@ -184,24 +171,6 @@ public abstract class BaseBot {
 			y += (ri.location.y - rc.getLocation().y) * ri.type.attackPower;
 		}
 		return new MapLocation((int) x, (int) y);
-	}
-
-	protected void transferSupplies() throws GameActionException {
-		RobotInfo[] nearbyAllies = rc.senseNearbyRobots(rc.getLocation(),
-				GameConstants.SUPPLY_TRANSFER_RADIUS_SQUARED, rc.getTeam());
-		double lowestSupply = rc.getSupplyLevel();
-		double transferAmount = 0;
-		MapLocation suppliesToThisLocation = null;
-		for (RobotInfo ri : nearbyAllies) {
-			if (ri.supplyLevel < lowestSupply) {
-				lowestSupply = ri.supplyLevel;
-				transferAmount = (rc.getSupplyLevel() - ri.supplyLevel) / 2;
-				suppliesToThisLocation = ri.location;
-			}
-		}
-		if (suppliesToThisLocation != null) {
-			rc.transferSupplies((int) transferAmount, suppliesToThisLocation);
-		}
 	}
 
 	protected Direction getRandomDirection() {

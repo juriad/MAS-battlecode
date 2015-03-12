@@ -10,14 +10,15 @@ import battlecode.common.Team;
 import battlecode.common.TerrainTile;
 
 public abstract class MovingBot extends BaseBot {
-	// ORE s 4 ma uz se tezi stejne pomalu jako s 0.0001 (beaver) a 0.8 pro minera
-	
-	protected static final double DEAD_ORE_EPSILON = 0.4;
+	// ORE s 4 ma uz se tezi stejne pomalu jako s 0.0001 (beaver) a 0.8 pro
+	// minera
+
+	protected static final double DEAD_ORE_EPSILON = 1;
 	protected static final double ORE_EPSILON = 0.8;
 
 	private static final int SINCE_SPAWN_RUN_AWAY = 8;
 	private int sinceSpawn = 0;
-	private Direction sinceSpawnDirection = null;
+	private MapLocation initialTargetLocation = null;
 
 	public MovingBot(RobotController rc) {
 		super(rc);
@@ -26,35 +27,27 @@ public abstract class MovingBot extends BaseBot {
 	/**
 	 * must be called exactly once a round
 	 * 
-	 * @return direction to go or NONE
+	 * @return if initial move was applied
 	 * @throws GameActionException
 	 */
-	protected Direction getInitialMoveDirection() throws GameActionException {
-		if (sinceSpawn < SINCE_SPAWN_RUN_AWAY) {
-			if (sinceSpawnDirection == null) {
-				sinceSpawnDirection = getRandomDirection();
-			}
-			Direction moveDir = getMoveDir(sinceSpawnDirection);
-			if (moveDir == null) {
-				moveDir = getMoveDir(sinceSpawnDirection.opposite());
-			}
-			if (moveDir != null) {
-				MapLocation location = rc.getLocation().add(moveDir, 10)
-						.add(getRandomDirection(), rand.nextInt(13));
-				Direction directionTo = rc.getLocation().directionTo(location);
-				Direction moveDir2 = getMoveDir(directionTo);
-				if (moveDir2 == Direction.OMNI) {
-					moveDir2 = getRandomDirection();
-				}
-				if (moveDir2 != null) {
-					sinceSpawnDirection = moveDir2;
-					return sinceSpawnDirection;
-				}
-			}
-		}
+	protected boolean initialMove() throws GameActionException {
 		sinceSpawn++;
-		return Direction.NONE;
+		if (sinceSpawn < SINCE_SPAWN_RUN_AWAY) {
+			if (initialTargetLocation == null) {
+				initialTargetLocation = rc.getLocation().add(
+						rand.nextInt(SINCE_SPAWN_RUN_AWAY * 4)
+								- SINCE_SPAWN_RUN_AWAY * 2,
+						rand.nextInt(SINCE_SPAWN_RUN_AWAY * 4)
+								- SINCE_SPAWN_RUN_AWAY * 2);
+			}
+			return moveTowards(initialTargetLocation);
+		}
+		return false;
 	}
+
+	protected MapLocation target = null;
+
+	protected abstract boolean isMiner();
 
 	protected void markDeadEnd() {
 		MapLocation loc = rc.getLocation();
@@ -80,7 +73,7 @@ public abstract class MovingBot extends BaseBot {
 			}
 		}
 
-		if (miningFree <= 1 && rc.senseOre(loc) < DEAD_ORE_EPSILON) {
+		if (miningFree <= 1) {
 			Registry.MAP.setMiningDeadEnd(loc);
 		}
 
@@ -91,7 +84,12 @@ public abstract class MovingBot extends BaseBot {
 				if (!freeDirs[i] && !freeDirs[(i + 1) % 8]
 						&& !freeDirs[(i + 2) % 8] && freeDirs[(i + 4) % 8]
 						&& freeDirs[(i + 6) % 8]) {
-					Registry.MAP.setAttackerDeadEnd(loc);
+					if (!Registry.MAP.isAttackerDeadEnd(loc)) {
+						Registry.MAP.setAttackerDeadEnd(loc);
+						Registry.COUNTER.increase();
+						System.out.println(Registry.COUNTER.get()
+								+ ": Marking " + loc + "as dead end");
+					}
 					break;
 				}
 			}
@@ -109,9 +107,8 @@ public abstract class MovingBot extends BaseBot {
 				continue;
 			}
 			if (rc.senseTerrainTile(loc) == TerrainTile.NORMAL
-					&& !(mining ? Registry.MAP.isMiningDeadEnd(ml)
-							: Registry.MAP.isAttackerDeadEnd(ml))) {
-				dirs[index] = d;
+					&& !Registry.MAP.isDeadEnd(ml, isMiner())) {
+				dirs[index++] = d;
 			}
 		}
 
@@ -133,9 +130,9 @@ public abstract class MovingBot extends BaseBot {
 		if (enemies.length > 0) {
 			// attack!
 			MapLocation target = getLeastHealthEnemy(enemies);
-			
+
 			if (rc.isWeaponReady()) {
-				rc.attackLocation(target);			
+				rc.attackLocation(target);
 			}
 			return target;
 		}
@@ -148,23 +145,21 @@ public abstract class MovingBot extends BaseBot {
 	 * @return true if moved
 	 * @throws GameActionException
 	 */
-	protected boolean moveTowards(MapLocation ml, boolean miner)
-			throws GameActionException {
-		//System.out.println("in moveTowards");
+	protected boolean moveTowards(MapLocation ml) throws GameActionException {
 		if (!rc.isCoreReady()) {
-			//System.out.println("core not ready");
 			return false;
 		}
 
-		//System.out.println("core ready");
-		Direction[] freeDirections = getFreeDirections(miner);
+		Direction[] freeDirections = getFreeDirections(isMiner());
 		Direction directionTo = rc.getLocation().directionTo(ml);
-
 		int d = directionTo.ordinal();
+
 		Direction opt = null;
 		int delta = 100;
 		for (Direction dir : freeDirections) {
-			if (rc.canMove(dir)) {
+			if (rc.canMove(dir)
+					&& dir.opposite() != Registry.MAP.getDirection(ml,
+							isMiner())) { // do not go back
 				int del = Math.min(
 						Math.min(Math.abs(dir.ordinal() - d),
 								Math.abs(dir.ordinal() - d - 8)),
@@ -189,44 +184,41 @@ public abstract class MovingBot extends BaseBot {
 				}
 			}
 		}
-		if (opt != null && rc.isCoreReady()) {
-			//System.out.println("move!!!");
+		if (opt != null) {
 			rc.move(opt);
+			MapLocation dest = rc.getLocation().add(opt);
+			Registry.MAP.setDirection(dest, isMiner(), opt);
 			return true;
 		}
 		return false;
 	}
 
-	protected double get_ore_epsilon() {
-		return 0;
-	}
-	
 	protected MapLocation getNearestTower(RobotController rc, Team t) {
-		MapLocation[] towers = (t == myTeam) ? rc.senseTowerLocations():rc.senseEnemyTowerLocations();
+		MapLocation[] towers = (t == myTeam) ? rc.senseTowerLocations() : rc
+				.senseEnemyTowerLocations();
 		int minSize = Integer.MAX_VALUE;
 		MapLocation minLoc = null;
-		MapLocation I = rc.getLocation();
+		MapLocation myLoc = rc.getLocation();
 		for (MapLocation tower : towers) {
-			int dist = I.distanceSquaredTo(tower);
-			if(dist < minSize)
-			{
+			int dist = myLoc.distanceSquaredTo(tower);
+			if (dist < minSize) {
 				minSize = dist;
 				minLoc = tower;
 			}
 		}
 		return minLoc;
 	}
-	
+
 	protected MapLocation getNearestEnemy(RobotController rc) {
-		RobotInfo[] enemies = rc.senseNearbyRobots(rc.getType().attackRadiusSquared, theirTeam);
+		RobotInfo[] enemies = rc.senseNearbyRobots(
+				rc.getType().attackRadiusSquared, theirTeam);
 		int minSize = Integer.MAX_VALUE;
 		MapLocation minLoc = null;
 		MapLocation I = rc.getLocation();
 		for (RobotInfo enemy : enemies) {
 			MapLocation loc = enemy.location;
 			int dist = I.distanceSquaredTo(loc);
-			if(dist < minSize)
-			{
+			if (dist < minSize) {
 				minSize = dist;
 				minLoc = loc;
 			}

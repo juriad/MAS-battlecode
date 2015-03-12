@@ -1,71 +1,45 @@
 package nasSikula;
 
-import battlecode.common.Direction;
+import nasSikula.context.Registry;
 import battlecode.common.GameActionException;
-import battlecode.common.MapLocation;
 import battlecode.common.RobotController;
-import battlecode.common.RobotType;
-import battlecode.common.Team;
+import battlecode.common.RobotInfo;
 
 public class AttackingBot extends MovingBot {
 
 	public AttackingBot(RobotController rc) {
 		super(rc);
-
 	}
 
 	public void execute() throws GameActionException {
-		
-		RobotType rt = rc.getType();
-		MapLocation target = null;
-		switch (rt){
-			case BASHER:
-				//MapLocation loc = getNearestEnemy(rc);
-				//pri attacku musi byt na 2 kroky blizko (na konci tahu) od mista na ktere utoci
-				target = getAttackDirection();
-				if (target == null)
-				{
-					target = getNearestTower(rc, theirTeam);
-				}
-				if (rc.isCoreReady())
-					//rc.move(dir);
-					moveTowards(target, false);
-				//TODO ulozit si ID toho po kom jdu - a nasleduj ho i dalsi tahy
-
-
-				break;
-			case LAUNCHER:
-				//if (rc.senseNearbyRobots(rt.attackRadiusSquared, theirTeam));
-				MapLocation tower = getNearestTower(rc, myTeam);
-				if (rc.getLocation().distanceSquaredTo(tower) > 3){
-					moveTowards(tower, false);
-				}
-				target = getAttackDirection();
-				Direction direction = rc.getLocation().directionTo(target);
-				if(rc.canLaunch(direction))
-					if (rc.getMissileCount() > 0)
-						rc.launchMissile(direction);
-				
-			default:
-				attackLeastHealtyEnemyInRange();
-				break;
-		}
-		
-
-
-		if (target == null) {
-			Direction initialMoveDirection = getInitialMoveDirection();
-			if (initialMoveDirection != Direction.NONE && rc.isCoreReady()) {
-				rc.move(initialMoveDirection);
-			} else {
-				markDeadEnd();
-			}
-
+		if (!initialMove()) {
+			attack();
 		}
 
-		transferSupplies();
-		rc.yield();
+		if (!Registry.CAPTAIN.amICaptain()) {
+			followCaptain(Registry.CAPTAIN.getCaptain());
+		} else {
+			lead();
+		}
+
+		markDeadEnd();
 	}
 
+	private void lead() throws GameActionException {
+		moveTowards(getNearestTower(rc, theirTeam));
+	}
+
+	private void followCaptain(RobotInfo captain) throws GameActionException {
+		moveTowards(captain.location);
+	}
+
+	protected void attack() throws GameActionException {
+		attackLeastHealtyEnemyInRange();
+	}
+
+	@Override
+	protected boolean isMiner() {
+		return false;
+	}
 
 }

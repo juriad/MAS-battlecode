@@ -25,7 +25,7 @@ public abstract class Captain extends RegistryClass {
 
 	public int getGroup() {
 		if (group == -1) {
-			group = (int) (rc.getID() % Math.sqrt(getCount()));
+			group = (int) (rc.getID() % Math.sqrt(getCount()) / 3);
 		}
 		return group;
 	}
