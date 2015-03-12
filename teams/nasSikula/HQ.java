@@ -2,6 +2,7 @@ package nasSikula;
 
 import nasSikula.context.Registry;
 import battlecode.common.GameActionException;
+import battlecode.common.MapLocation;
 import battlecode.common.RobotController;
 import battlecode.common.RobotInfo;
 import battlecode.common.RobotType;
@@ -11,13 +12,18 @@ public class HQ extends Tower {
 	// public static int sumOfBuildings = 0;
 	// public static HQ HQ = null;
 	public HQ(RobotController rc) {
+		
 		super(rc);
+//		scanSouroundings(rc);
 	}
-
-	// public HQ init(){
-	// HQ = new HQ(rc);
-	// return HQ;
-	// }
+//	private void scanSouroundings(RobotController rc) {
+		//		MapLocation[] objects ;
+//		System.out.println("Enemy HQ " + rc.senseEnemyHQLocation());
+//		for (MapLocation tower : rc.senseEnemyTowerLocations()) {
+//			System.out.println("tower "+ tower);
+//		}
+//	}
+	
 
 	private void countRobots() {
 		int[] counts = new int[RobotType.values().length];

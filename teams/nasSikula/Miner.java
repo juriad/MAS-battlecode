@@ -13,25 +13,30 @@ public class Miner extends MovingBot {
 
 	private static double ORE_EPSILON = 0.8;
 
-	@Override
-	public void execute() throws GameActionException {
+	protected void logic() throws GameActionException{
 		MapLocation attackLocation = getAttackDirection();
 		// TODO remember running from danger
 		if (attackLocation != null) {
 			runToSafetyOrAttack(attackLocation);
 
 		} else {
+			if (!isMiner())
+				spawnOrBuild();
 			mineOrMoveTowardsOre();
 		}
 
 		markDeadEnd();
+	}
+	@Override
+	public void execute() throws GameActionException {
+		logic();
 	}
 
 	protected MapLocation towardsOre() throws GameActionException {
 		int x = rc.getLocation().x;
 		int y = rc.getLocation().y;
 		MapLocation[] locations = MapLocation.getAllMapLocationsWithinRadiusSq(
-				rc.getLocation(), 4);
+				rc.getLocation(), 8);
 
 		for (MapLocation ml : locations) {
 			if (rc.senseRobotAtLocation(ml) == null) {
@@ -45,17 +50,18 @@ public class Miner extends MovingBot {
 		return mapLocation;
 	}
 
-	protected void mineOrMoveTowardsOre() throws GameActionException {
+	protected boolean mineOrMoveTowardsOre() throws GameActionException {
 		double ore = rc.senseOre(rc.getLocation());
 		if (ore < ORE_EPSILON) {
 			if (moveTowards(towardsOre())) {
 				// return true;
 			}// moved - or not - anyway try to mine
 		}
-		if (rc.isCoreReady()) {
+		if (rc.isCoreReady() && (ore != 0) ) {
 			rc.mine();
+			return true;
 		}
-		// return false;
+		return false;
 	}
 
 	protected void runToSafetyOrAttack(MapLocation attackLocation)

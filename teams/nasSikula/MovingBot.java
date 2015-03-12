@@ -225,6 +225,19 @@ public abstract class MovingBot extends BaseBot {
 		}
 		return minLoc;
 	}
+	
+	protected MapLocation getNearestTowerOrHQ(RobotController rc, Team t) {
+		MapLocation myLoc = rc.getLocation();
+		MapLocation Tower = getNearestTower(rc, t);
+		MapLocation HQ = (t == myTeam) ? rc.senseHQLocation(): rc.
+				senseEnemyHQLocation();
+		if (Tower == null)
+			return HQ;
+					
+		int distToHQ = myLoc.distanceSquaredTo(HQ);
+		int distToTower = myLoc.distanceSquaredTo(Tower);
+		return distToHQ < distToTower ? HQ :Tower;
+	}
 
 	protected MapLocation getRandomTowerOrHQ(RobotController rc, Team t) {
 		MapLocation[] towers = (t == myTeam) ? rc.senseTowerLocations() : rc

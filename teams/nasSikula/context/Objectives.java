@@ -133,7 +133,8 @@ public class Objectives {
 
 	public RobotType spawnOrBuild(RobotType type) {
 		// ze zacatku vyrob factory a beavery
-		if (Clock.getRoundNum() < 250) {
+		int waitTill =250;
+		if (Clock.getRoundNum() < waitTill) {
 			switch (type) {
 				case HQ :
 					return wantToBuild(RobotType.BEAVER);
@@ -146,7 +147,7 @@ public class Objectives {
 			}
 
 		}
-		if (Clock.getRoundNum() > 250 && rc.getTeamOre() < 700) {
+		if (Clock.getRoundNum() > waitTill && rc.getTeamOre() < 700) {
 			return null;
 		}
 		if (!type.isBuilding) { // prorezat moznosti
