@@ -131,9 +131,10 @@ public class Objectives {
 
 	}
 
+	int waitTill = 250;
 	public RobotType spawnOrBuild(RobotType type) {
 		// ze zacatku vyrob factory a beavery
-		int waitTill =250;
+		
 		if (Clock.getRoundNum() < waitTill) {
 			switch (type) {
 				case HQ :
@@ -184,7 +185,7 @@ public class Objectives {
 				// return RobotType.LAUNCHER;
 
 			case HELIPAD :
-				// return RobotType.DRONE;
+				 return RobotType.DRONE;
 			case LAUNCHER :
 				// return RobotType.MISSILE;
 
@@ -213,15 +214,15 @@ public class Objectives {
 	}
 
 	public int getOptimalNumber(RobotType type) {// kolik by jich ted melo byt
-		if (Clock.getRoundNum() < 250) {
+		if (Clock.getRoundNum() < waitTill) {
 			switch (type) {
 				case BEAVER :
 				case MINER :
-					return 15;
+					return 15*waitTill/100;
 				case MINERFACTORY :
-					return 2;
+					return 2*waitTill/100;
 				case BARRACKS :
-					return 1;
+					return 1*waitTill/500+1;
 				default :
 					return 0;
 			}
@@ -273,9 +274,9 @@ public class Objectives {
 			case COMPUTER :
 				break;
 			case DRONE :
-				return 0;
+				return 0;//35;
 			case HELIPAD :
-				return 0;
+				return 0;//4;
 			case LAUNCHER :
 				return 0;
 			case MISSILE :
